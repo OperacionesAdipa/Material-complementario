@@ -15,25 +15,18 @@
   --green:#059669;--red:#dc2626;--red-lt:#fee2e2;--amber:#d97706;--amber-lt:#fef3c7;
 }
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
-
-/* ── Header ── */
 header{background:var(--navy);padding:0 1.5rem;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(9,30,66,.25)}
 .hd-left{display:flex;align-items:center;gap:14px}
 .hd-logo{height:32px;width:auto}
 .hd-sep{width:1px;height:22px;background:rgba(255,255,255,.15)}
 .hd-tag{font-size:12px;color:var(--blue-lt);font-weight:500;letter-spacing:.05em;text-transform:uppercase}
 .hd-right{display:flex;align-items:center;gap:8px}
-.icon-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:6px 10px;cursor:pointer;color:#fff;font-size:16px;transition:background .12s;line-height:1}
-.icon-btn:hover{background:rgba(255,255,255,.16)}
-
-/* ── Phase upload ── */
 .hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);padding:2rem 1.5rem 3rem;text-align:center;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:-70px;right:-90px;width:300px;height:300px;background:var(--purple);opacity:.14;border-radius:50%}
 .hero::after{content:'';position:absolute;bottom:-80px;left:-70px;width:240px;height:240px;background:var(--blue);opacity:.11;border-radius:50%}
 .hero h1{font-size:24px;font-weight:700;color:#fff;margin-bottom:6px;position:relative;z-index:1}
 .hero p{font-size:13px;color:var(--blue-lt);max-width:520px;margin:0 auto;position:relative;z-index:1}
 .main{max-width:960px;margin:-1.25rem auto 3rem;padding:0 1.25rem;position:relative;z-index:2}
-
 .how-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:1.25rem}
 .how-title{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
 .how-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
@@ -41,8 +34,6 @@ header{background:var(--navy);padding:0 1.5rem;height:60px;display:flex;align-it
 .step-n{width:20px;height:20px;border-radius:50%;background:var(--lavender);color:var(--purple);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
 .step-t{font-size:12px;color:var(--text-mid);line-height:1.45}
 .step-t strong{color:var(--navy)}
-
-/* ── Drop zone ── */
 #drop-zone{background:var(--white);border:2px dashed var(--border-dk);border-radius:14px;padding:2.5rem 1.5rem;text-align:center;cursor:pointer;transition:all .15s;margin-bottom:1rem;user-select:none}
 #drop-zone:hover{border-color:var(--purple);background:#faf9ff;box-shadow:0 0 0 4px rgba(112,78,253,.07)}
 #drop-zone.drag-over{border-color:var(--blue);background:#f0faff;box-shadow:0 0 0 4px rgba(44,183,255,.1)}
@@ -56,8 +47,6 @@ header{background:var(--navy);padding:0 1.5rem;height:60px;display:flex;align-it
 .chip-docx{background:var(--blue-lt);color:#1565c0}
 #file-input{display:none}
 .size-note{font-size:12px;color:var(--text-muted);text-align:center}
-
-/* ── Progress ── */
 #phase-processing{display:none;max-width:1400px;margin:2rem auto;padding:0 1.5rem}
 .prog-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:1.75rem}
 .prog-top{display:flex;justify-content:space-between;font-size:13px;color:var(--text-mid);margin-bottom:10px}
@@ -65,8 +54,6 @@ header{background:var(--navy);padding:0 1.5rem;height:60px;display:flex;align-it
 .prog-bar{height:8px;background:var(--lavender);border-radius:99px;overflow:hidden;margin-bottom:10px}
 .prog-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--blue));border-radius:99px;transition:width .25s}
 .prog-file{font-size:11px;color:var(--text-muted);font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-/* ── Review workspace ── */
 #phase-review{display:none}
 .review-bar{background:var(--navy);padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:60px;z-index:90;box-shadow:0 2px 8px rgba(9,30,66,.2)}
 .rb-stats{display:flex;gap:16px}
@@ -74,8 +61,6 @@ header{background:var(--navy);padding:0 1.5rem;height:60px;display:flex;align-it
 .rb-stat .n{font-size:18px;font-weight:700;color:#fff;line-height:1}
 .rb-stat .l{font-size:10px;color:var(--blue-lt);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
 .rb-actions{display:flex;gap:8px;flex-wrap:wrap}
-
-/* ── Buttons ── */
 button{font-size:13px;padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:var(--white);color:var(--navy);cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;transition:all .12s;font-weight:500;white-space:nowrap}
 button:hover{background:var(--bg);border-color:var(--border-dk)}
 button:disabled{opacity:.45;cursor:not-allowed}
@@ -87,9 +72,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .btn-success:hover{background:#047857;border-color:#047857}
 .btn-sm{font-size:12px;padding:4px 9px;border-radius:6px}
 .btn-icon{padding:5px 8px;border-radius:7px;font-size:14px}
-
-/* ── Review main ── */
-.review-main{max-width:960px;margin:0 auto;padding:1rem 1.25rem 3rem}
+.review-main{max-width:100%;margin:0;padding:1rem 1.5rem 3rem}
 .legend{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
 .leg-lbl{font-size:11px;color:var(--text-muted)}
 .badge{font-size:11px;padding:2px 9px;border-radius:99px;font-weight:600;display:inline-block;white-space:nowrap}
@@ -99,8 +82,6 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .b-docx{background:var(--blue-lt);color:#1e3a8a}
 .b-error{background:var(--red-lt);color:#991b1b}
 .b-kept{background:#f0f0ef;color:#555}
-
-/* ── Table ── */
 .toolbar{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
 .tbl-wrap{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden}
 table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
@@ -111,7 +92,6 @@ tbody tr.row-error td{background:#fff8f8}
 tbody tr.row-kept td{background:#fafafa}
 tbody tr:hover td{background:#f9f8ff}
 tbody tr.row-error:hover td{background:#fff0f0}
-
 .fname{font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:var(--text-muted);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ext-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;text-transform:uppercase;letter-spacing:.04em}
 .ext-pdf{background:var(--red-lt);color:#b91c1c}
@@ -121,10 +101,8 @@ tbody tr.row-error:hover td{background:#fff0f0}
 .name-input.is-error{border-color:#fca5a5;background:#fff8f8}
 .name-input.is-ok{border-color:#6ee7b7;background:#f0fff8}
 .name-input:disabled{opacity:.5;background:#f0f0ef;cursor:not-allowed}
-.row-actions{display:flex;gap:4px}
+.name-input.is-dup{border-color:var(--amber)!important;background:var(--amber-lt)!important}
 input[type=checkbox]{width:15px;height:15px;accent-color:var(--purple);cursor:pointer}
-
-/* ── Modals ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(9,30,66,.55);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(2px)}
 .modal{background:var(--white);border-radius:16px;width:100%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(9,30,66,.25)}
 .modal-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
@@ -133,15 +111,10 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--purple);cursor:po
 .modal-close:hover{background:var(--bg)}
 .modal-body{padding:1.5rem;overflow-y:auto;flex:1}
 .modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;flex-shrink:0;background:var(--bg)}
-
-/* ── Preview modal ── */
 #preview-modal .modal{max-width:860px}
-.preview-frame{width:100%;height:70vh;border:none;border-radius:8px;background:#f8f8f8}
 .preview-docx{width:100%;min-height:60vh;padding:1rem;border:1px solid var(--border);border-radius:8px;overflow-y:auto;font-size:14px;line-height:1.7;background:#fff}
 .preview-docx h1,.preview-docx h2,.preview-docx h3{margin:1em 0 .5em;color:var(--navy)}
 .preview-docx p{margin-bottom:.75em}
-
-/* ── Upload modal ── */
 #upload-modal .modal{max-width:500px}
 .form-group{margin-bottom:1.25rem}
 .form-label{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px;display:block}
@@ -163,19 +136,7 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--purple);cursor:po
 .upload-result p{font-size:13px;color:var(--text-muted)}
 .spinner{display:inline-block;width:28px;height:28px;border:3px solid var(--lavender);border-top-color:var(--purple);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── Settings modal ── */
-#settings-modal .modal{max-width:440px}
-
-/* ── Toast ── */
-#toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s;pointer-events:none;z-index:999;border-left:4px solid var(--blue);max-width:320px}
-#toast.show{opacity:1;transform:translateY(0)}
-#toast.toast-error{border-left-color:var(--red)}
-
-/* ── New UI elements ── */
 .ext-suffix{font-size:12px;font-family:'SF Mono','Fira Code',monospace;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);padding:4px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0}
-.name-input.is-dup{border-color:var(--amber)!important;background:var(--amber-lt)!important}
-.review-main{max-width:100%;margin:0;padding:1rem 1.5rem 3rem}
 .dup-warn{font-size:10px;color:var(--amber);font-weight:600;white-space:nowrap;margin-left:4px;flex-shrink:0}
 .alt-panel{background:var(--white);border:1px solid var(--border-dk);border-radius:9px;padding:6px;margin-top:6px;display:none;min-width:380px;max-width:600px;box-shadow:0 4px 16px rgba(9,30,66,.12);position:relative;z-index:10}
 .alt-option{padding:8px 10px;border-radius:7px;cursor:pointer;font-size:12px;color:var(--text-mid);display:flex;align-items:flex-start;gap:8px;transition:background .1s;line-height:1.5}
@@ -185,26 +146,19 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--purple);cursor:po
 .btn-regen:hover{background:#e0d5ff!important}
 .btn-orig{font-size:11px!important;padding:4px 8px!important;color:var(--text-mid)}
 .row-actions{display:flex;gap:3px;flex-wrap:nowrap}
-.method-detail{font-size:10px;color:var(--text-muted);margin-top:2px;line-height:1.3}
-
+#toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s;pointer-events:none;z-index:999;border-left:4px solid var(--blue);max-width:320px}
+#toast.show{opacity:1;transform:translateY(0)}
+#toast.toast-error{border-left-color:var(--red)}
 #toast.toast-ok{border-left-color:var(--green)}
-
 footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);border-top:1px solid var(--border);background:var(--white);margin-top:3rem}
-
-@media(max-width:640px){
-  .form-row{grid-template-columns:1fr}
-  .rb-stats{gap:10px}
-  .rb-stat .n{font-size:15px}
-}
+@media(max-width:640px){.form-row{grid-template-columns:1fr}.rb-stats{gap:10px}.rb-stat .n{font-size:15px}}
 </style>
 </head>
 <body>
 
-<!-- ── Header ─────────────────────────────────────────────────── -->
 <header>
   <div class="hd-left">
-    <img src="https://adipa.cl/content/uploads/2022/10/logo-adipa.svg"
-         alt="Adipa" class="hd-logo"
+    <img src="https://adipa.cl/content/uploads/2022/10/logo-adipa.svg" alt="Adipa" class="hd-logo"
          onerror="this.style.display='none';document.getElementById('logo-fb').style.display='block'">
     <span id="logo-fb" style="display:none;color:#fff;font-weight:700;font-size:17px;letter-spacing:1px">ADIPA</span>
     <div class="hd-sep"></div>
@@ -213,7 +167,6 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
   <div class="hd-right"></div>
 </header>
 
-<!-- ── Phase 0: Upload ─────────────────────────────────────────── -->
 <div id="phase-upload">
   <div class="hero">
     <h1>Gestor de documentos para Moodle</h1>
@@ -225,7 +178,7 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
       <div class="how-steps">
         <div class="how-step"><div class="step-n">1</div><div class="step-t"><strong>Sube la carpeta</strong> — ZIP del docente, PDFs o DOCX sueltos</div></div>
         <div class="how-step"><div class="step-n">2</div><div class="step-t"><strong>Revisa nombres</strong> — confirma, edita o mantén el original</div></div>
-        <div class="how-step"><div class="step-n">3</div><div class="step-t"><strong>Selecciona el aula</strong> — curso o diplomado con sus IDs</div></div>
+        <div class="how-step"><div class="step-n">3</div><div class="step-t"><strong>Selecciona el aula</strong> — formato y IDs de Moodle</div></div>
         <div class="how-step"><div class="step-n">4</div><div class="step-t"><strong>Sube a Moodle</strong> — el flujo de Make se encarga del resto</div></div>
       </div>
     </div>
@@ -244,7 +197,6 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
   </div>
 </div>
 
-<!-- ── Phase 1: Processing ─────────────────────────────────────── -->
 <div id="phase-processing">
   <div class="prog-card" style="max-width:680px;margin:3rem auto;padding:1.75rem">
     <div class="prog-top">
@@ -256,10 +208,7 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
   </div>
 </div>
 
-<!-- ── Phase 2: Review ─────────────────────────────────────────── -->
 <div id="phase-review">
-
-  <!-- sticky action bar -->
   <div class="review-bar">
     <div class="rb-stats">
       <div class="rb-stat"><div class="n" id="rb-total">0</div><div class="l">archivos</div></div>
@@ -269,11 +218,10 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
     </div>
     <div class="rb-actions">
       <button class="btn-ghost" onclick="resetAll()">↺ Nuevo lote</button>
-      <button class="btn-ghost" onclick="downloadZip()" id="btn-dl">⬇ Descargar ZIP</button>
+      <button class="btn-ghost" onclick="downloadZip()">⬇ Descargar ZIP</button>
       <button class="btn-success" onclick="openUploadModal()">🎓 Subir al aula</button>
     </div>
   </div>
-
   <div class="review-main">
     <div class="legend">
       <span class="leg-lbl">Pasa el cursor sobre el método para ver de dónde se extrajo el título:</span>
@@ -283,13 +231,11 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
       <span class="badge b-docx">✓ Encabezado Word H1/H2</span>
       <span class="badge b-error">⚠ Sin título detectado</span>
     </div>
-
     <div class="toolbar">
       <input type="checkbox" id="chk-all" title="Seleccionar todos" onchange="toggleAll(this.checked)">
       <label for="chk-all" style="font-size:13px;color:var(--text-mid);cursor:pointer;margin-right:6px">Seleccionar todos</label>
       <button class="btn-sm" onclick="applySelected(false)">↩ Mantener nombre original</button>
     </div>
-
     <div class="tbl-wrap">
       <table>
         <thead>
@@ -308,7 +254,7 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
   </div>
 </div>
 
-<!-- ── Preview modal ───────────────────────────────────────────── -->
+<!-- Preview modal -->
 <div id="preview-modal" class="modal-overlay" style="display:none" onclick="closeOnOverlay(event,'preview-modal')">
   <div class="modal" style="max-width:860px">
     <div class="modal-header">
@@ -318,13 +264,11 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
       </div>
       <button class="modal-close" onclick="closeModal('preview-modal')">✕</button>
     </div>
-    <div class="modal-body" style="padding:1rem" id="preview-body">
-      <!-- content injected here -->
-    </div>
+    <div class="modal-body" style="padding:1rem" id="preview-body"></div>
   </div>
 </div>
 
-<!-- ── Upload to Moodle modal ──────────────────────────────────── -->
+<!-- Upload modal -->
 <div id="upload-modal" class="modal-overlay" style="display:none" onclick="closeOnOverlay(event,'upload-modal')">
   <div class="modal" style="max-width:500px">
     <div class="modal-header">
@@ -332,15 +276,11 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
       <button class="modal-close" onclick="closeModal('upload-modal')">✕</button>
     </div>
     <div class="modal-body" id="upload-body">
-
-      <!-- Step 1: form -->
       <div id="upload-form">
-        <!-- Tipo de formato -->
         <div class="form-group">
           <div class="form-label">Formato del aula en Moodle</div>
           <div style="display:flex;flex-direction:column;gap:8px">
-
-            <label class="formato-opt" id="fmt-apoyo" onclick="selectFormato('apoyo')">
+            <label class="formato-opt selected" id="fmt-apoyo" onclick="selectFormato('apoyo')">
               <input type="radio" name="fmt" value="apoyo" checked style="display:none">
               <div class="fmt-icon">📁</div>
               <div class="fmt-info">
@@ -349,7 +289,6 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
               </div>
               <div class="fmt-check" id="check-apoyo">✓</div>
             </label>
-
             <label class="formato-opt" id="fmt-asinc" onclick="selectFormato('asinc')">
               <input type="radio" name="fmt" value="asinc" style="display:none">
               <div class="fmt-icon">📂</div>
@@ -359,131 +298,75 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
               </div>
               <div class="fmt-check" id="check-asinc"></div>
             </label>
-
-            <label class="formato-opt fmt-disabled" id="fmt-diplo" style="cursor:not-allowed;opacity:.5">
-              <input type="radio" name="fmt" value="diplo" disabled style="display:none">
+            <label class="formato-opt" style="cursor:not-allowed;opacity:.5">
+              <input type="radio" disabled style="display:none">
               <div class="fmt-icon">🎓</div>
               <div class="fmt-info">
                 <div class="fmt-title">Diplomado / Postitulo</div>
-                <div class="fmt-desc">Módulo con subcarpetas internas. No disponible aún — Make aún no soporta subir a subcarpetas.</div>
+                <div class="fmt-desc">Módulo con subcarpetas internas. No disponible aún.</div>
               </div>
               <div style="font-size:11px;font-weight:600;color:var(--red);white-space:nowrap">No disponible</div>
             </label>
-
           </div>
         </div>
-
-        <!-- Número de módulo (solo asíncrono) -->
         <div id="modulo-field" style="display:none" class="form-group">
           <div class="form-label">Número de módulo</div>
           <input class="form-input" type="number" id="num-modulo" placeholder="Ej: 2" min="1" style="max-width:160px">
         </div>
-
-        <!-- IDs Moodle -->
         <div class="form-group">
           <div class="form-label">IDs del curso en Moodle</div>
           <div class="form-row">
-            <div>
-              <input class="form-input" type="text" id="id-cl" placeholder="ID Chile">
-              <div class="hint">Chile (CL)</div>
-            </div>
-            <div>
-              <input class="form-input" type="text" id="id-mx" placeholder="ID México">
-              <div class="hint">México (MX)</div>
-            </div>
-            <div>
-              <input class="form-input" type="text" id="id-co" placeholder="ID Colombia">
-              <div class="hint">Colombia (CO)</div>
-            </div>
+            <div><input class="form-input" type="text" id="id-cl" placeholder="ID Chile"><div class="hint">Chile (CL)</div></div>
+            <div><input class="form-input" type="text" id="id-mx" placeholder="ID México"><div class="hint">México (MX)</div></div>
+            <div><input class="form-input" type="text" id="id-co" placeholder="ID Colombia"><div class="hint">Colombia (CO)</div></div>
           </div>
         </div>
-
         <div class="form-group" style="background:var(--bg);border-radius:9px;padding:10px 14px">
           <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">Archivos a subir</div>
           <div style="font-size:13px;font-weight:600;color:var(--navy)" id="upload-file-count">—</div>
         </div>
       </div>
-
-      <!-- Step 2: loading -->
-      <div id="upload-loading" style="display:none" class="upload-result">
+      <div id="upload-loading" style="display:none;text-align:center;padding:1.5rem 0">
         <div class="spinner"></div>
-        <h3 style="margin-top:16px">Subiendo a Moodle…</h3>
-        <p id="upload-loading-text">Empaquetando archivos</p>
-        <div style="margin-top:12px;font-size:12px;color:var(--text-muted)" id="upload-progress-text"></div>
+        <h3 style="margin-top:16px;font-size:17px;font-weight:600">Subiendo a Moodle…</h3>
+        <p id="upload-loading-text" style="font-size:13px;color:var(--text-muted);margin-top:6px">Preparando archivos</p>
+        <div id="upload-progress-text" style="margin-top:8px;font-size:12px;color:var(--text-muted)"></div>
       </div>
-
-      <!-- Step 3: success -->
-      <div id="upload-success" style="display:none" class="upload-result">
-        <div class="icon">✅</div>
-        <h3 style="color:var(--green)">¡Subido con éxito!</h3>
-        <p id="upload-success-msg">Los archivos fueron subidos al aula virtual.</p>
+      <div id="upload-success" style="display:none;text-align:center;padding:1.5rem 0">
+        <div style="font-size:48px;margin-bottom:12px">✅</div>
+        <h3 style="color:var(--green);font-size:17px;font-weight:600;margin-bottom:6px">¡Subido con éxito!</h3>
+        <p id="upload-success-msg" style="font-size:13px;color:var(--text-muted)">Los archivos fueron subidos al aula virtual.</p>
       </div>
-
-      <!-- Step 4: error -->
-      <div id="upload-error" style="display:none" class="upload-result">
-        <div class="icon">❌</div>
-        <h3 style="color:var(--red)">Error al subir</h3>
-        <p id="upload-error-msg">No se pudo conectar con Make. Verifica el webhook en configuración.</p>
+      <div id="upload-error" style="display:none;text-align:center;padding:1.5rem 0">
+        <div style="font-size:48px;margin-bottom:12px">❌</div>
+        <h3 style="color:var(--red);font-size:17px;font-weight:600;margin-bottom:6px">Error al subir</h3>
+        <p id="upload-error-msg" style="font-size:13px;color:var(--text-muted)">No se pudo conectar con Make.</p>
       </div>
-
     </div>
     <div class="modal-footer" id="upload-footer">
       <button onclick="closeModal('upload-modal')">Cancelar</button>
-      <button class="btn-primary" onclick="submitUpload()" id="btn-submit-upload">Subir al aula →</button>
-    </div>
-  </div>
-</div>
-
-<!-- ── Settings modal ─────────────────────────────────────────── -->
-<div id="settings-modal" class="modal-overlay" style="display:none" onclick="closeOnOverlay(event,'settings-modal')">
-  <div class="modal" style="max-width:440px">
-    <div class="modal-header">
-      <div class="modal-title">⚙ Configuración</div>
-      <button class="modal-close" onclick="closeModal('settings-modal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <div class="form-label">URL del Webhook de Make</div>
-        <input class="form-input" type="url" id="webhook-url" placeholder="https://hook.us2.make.com/...">
-        <div class="hint">El webhook de Make que recibe los archivos y los sube a Moodle.</div>
-      </div>
-      <div style="background:var(--blue-lt);border-radius:9px;padding:12px 14px;font-size:12px;color:#1e3a8a;line-height:1.6">
-        <strong>Payload enviado al webhook:</strong><br>
-        • tipo_aula, id_cl, id_mx, id_co<br>
-        • modulo, clase (solo diplomados)<br>
-        • archivos: nombre_original, nombre_final, contenido (base64)<br>
-        <br>
-        <strong>Límite de peso por envío:</strong> Make acepta hasta ~5 MB en planes básicos y ~50 MB en planes de pago. Para lotes más grandes, configura Make para recibir los archivos en secuencia (un webhook por archivo).
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button onclick="closeModal('settings-modal')">Cancelar</button>
-      <button class="btn-primary" onclick="saveSettings()">Guardar</button>
+      <button class="btn-primary" onclick="submitUpload()">Subir al aula →</button>
     </div>
   </div>
 </div>
 
 <div id="toast"></div>
-<footer>Herramienta interna Adipa &nbsp;·&nbsp; El procesamiento de archivos ocurre 100% en tu navegador — ningún archivo se envía a servidores externos salvo al webhook configurado.</footer>
+<footer>Herramienta interna Adipa &nbsp;·&nbsp; El procesamiento ocurre 100% en tu navegador — los archivos solo se envían al webhook de Make configurado.</footer>
 
-<!-- ── Libraries ─────────────────────────────────────────────────── -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-
 <script>
-// ── State ─────────────────────────────────────────────────────────
-const state = {
-  files: [],        // { id, originalName, suggestedName, finalName, useOriginal, selected, method, blob, size, blobUrl }
-  webhookUrl: 'https://hook.us2.make.com/vmhq32lk4m0sp77aowoipq9lmbu4tla8'
-};
+// ── CONFIGURACIÓN ─────────────────────────────────────────────────
+const WEBHOOK_URL = 'https://hook.us2.make.com/vmhq32lk4m0sp77aowoipq9lmbu4tla8';
 
-// ── Init ──────────────────────────────────────────────────────────
+// ── State ─────────────────────────────────────────────────────────
+const state = { files: [] };
+
 window.addEventListener('load', () => {
   if (window.pdfjsLib)
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  document.getElementById('webhook-url').value = state.webhookUrl;
 });
 
 const dropZone  = document.getElementById('drop-zone');
@@ -493,11 +376,9 @@ dropZone.addEventListener('dragleave', e => { if (!dropZone.contains(e.relatedTa
 dropZone.addEventListener('drop',      e => { e.preventDefault(); dropZone.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
 fileInput.addEventListener('change',   e => { if (e.target.files.length) handleFiles(e.target.files); });
 
-// ── File collection ───────────────────────────────────────────────
 async function handleFiles(fileList) {
   const collected = [];
-  let totalSize   = 0;
-
+  let totalSize = 0;
   for (const file of fileList) {
     const low = file.name.toLowerCase();
     if (low.endsWith('.zip')) {
@@ -519,14 +400,10 @@ async function handleFiles(fileList) {
       collected.push({ name: file.name, blob: file, size: file.size });
     }
   }
-
   if (!collected.length) { toast('No se encontraron archivos PDF o DOCX.', 'error'); return; }
-  if (totalSize > 500 * 1024 * 1024)
-    toast(`⚠ Lote grande (${fmt(totalSize)}) — el navegador puede tardar o quedarse sin memoria. Considera subir en partes.`, 'error');
-
+  if (totalSize > 500*1024*1024) toast(`⚠ Lote grande (${fmt(totalSize)}) — considera subir en partes.`, 'error');
   setPhase('processing');
   state.files = [];
-
   for (let i = 0; i < collected.length; i++) {
     const f = collected[i];
     setProgress(i, collected.length, f.name);
@@ -544,25 +421,23 @@ async function handleFiles(fileList) {
   await delay(300);
   renderReview();
   setPhase('review');
-  translateEnglishTitles(); // background translation, non-blocking
+  translateEnglishTitles();
 }
 
-// ── Title quality filters ──────────────────────────────────────────
-
+// ── Garbage filters ───────────────────────────────────────────────
 const GARBAGE_RE = [
   /\.(docx?|indd|vp|xlsx?|pptx?|ai|eps|qxd|pub|pages|odt|rtf|wps|idml|psd|cdr)(\s|$)/i,
   /^microsoft\s+(word|excel|powerpoint|office)/i,
   /^(adobe|indesign|quark|corel)/i,
-  /^[a-zA-Z]{1,4}\d{2,}(\/\d+)?$/,           // RP8283, RP82/83
+  /^[a-zA-Z]{1,4}\d{2,}(\/\d+)?$/,
   /^\d{3,}$/,
   /^(untitled|sin\s*título|document|nuevo\s+documento|undefined|null)$/i,
-  /^[Rr]ticles$/,                              // "Articles" logo truncated
+  /^[Rr]ticles$/,
   /^(articles?|reviews?|editorial|features?)$/i,
-  /^(https?:\/\/)?doi[\s.:\/]*10\.\d{4}/i,    // DOI URLs: doi:10.xxx, Doi10., Httpsdoi.org
+  /^(https?:\/\/)?doi[\s.:\/]*10\.\d{4}/i,
   /^Httpsdoi/i,
   /^https?:\/\/doi\.org/i,
 ];
-
 const GENERIC_RE = /^(capítulo|capitulo|chapter|introducción|introduction|resumen|abstract|anexo|apéndice|prefacio|prólogo|índice|indice|contenido|tabla|figura|parte|sección|seccion|tema|unidad|original\s+article|research\s+article|review\s+article|case\s+study|case\s+report|brief\s+report)\.?\s*\d*$/i;
 
 function isGarbage(text) {
@@ -574,8 +449,6 @@ function isGarbage(text) {
   if (/[a-zA-Z0-9]{4,}\.[a-z]{2,5}$/.test(t) && !t.includes(' ')) return true;
   return false;
 }
-
-// Detect broken glyph encoding: "El c E r E bro" — raised threshold to fix false positives (fix F)
 function hasEncodingIssue(text) {
   if (!text || text.length < 10) return false;
   const tokens = text.trim().split(/\s+/);
@@ -583,8 +456,6 @@ function hasEncodingIssue(text) {
   const singles = tokens.filter(t => t.length === 1 && /[A-Za-z]/.test(t));
   return singles.length / tokens.length > 0.48;
 }
-
-// Detect corrupted Latin-1 accents: "artstico" instead of "artístico" (fix D)
 function hasCorruptedAccents(text) {
   if (!text || text.length < 12) return false;
   if (/[áéíóúñü]/i.test(text)) return false;
@@ -592,8 +463,6 @@ function hasCorruptedAccents(text) {
   const hasMissing = /\b\w*(cion|stico|afio|gico|fico|mico|tico|nimo|bito|grafia)\b/i.test(text);
   return hasSpanish && hasMissing;
 }
-
-// Fix spaced special chars from bad PDF encoding: "acompa ñ amiento" → "acompañamiento"
 function fixCharEncoding(text) {
   if (!text) return text;
   return text
@@ -601,42 +470,29 @@ function fixCharEncoding(text) {
     .replace(/([a-z])\s+([áéíóúü])\s+([a-z])/gi, '$1$2$3')
     .replace(/\s{2,}/g, ' ').trim();
 }
-
-// Clean metadata title: remove repo prefixes, bilingual suffixes, author appendages, DOI, footnotes
 function cleanMeta(text) {
   if (!text) return text;
   let t = text.trim();
-  // Strip HTML/XML tags first (fix 3)
   t = t.replace(/<[^>]+>/g, ' ').replace(/&[a-z#0-9]+;/gi, ' ').replace(/\s+/g, ' ').trim();
-  // Strip source/citation prefixes like "* Fuente:", "Source:", "Ref:"
   t = t.replace(/^[\*\s]*(?:fuente|source|ref|cita|autor|title|título)[\s:]+/i, '').trim();
-  // Strip DOI/URL prefixes (fix E, G)
   if (/^(https?:\/\/)?doi[\s.:\/]*10\.\d{4}/i.test(t) || /^Httpsdoi/i.test(t)) return '';
-  // Strip known repository prefixes (fix 8)
   t = t.replace(/^(Redalyc\.|Dialnet[\-\s]+|ResearchGate\.|Academia\.|Scielo\.|JSTOR\.)/i, '').trim();
-  // Remove bilingual part after " = " (fix 10)
   const eq = t.indexOf(' = ');
   if (eq > 10) t = t.substring(0, eq).trim();
-  // Remove footnote references like [1], [2] (fix A sub)
   t = t.replace(/\[\d+\]/g, '').trim();
-  // Remove chapter/section number prefix "7. Title" (fix B)
   t = t.replace(/^\d+\.\s+/, '').trim();
-  // Remove trailing noise: asterisk, dagger, slash-number
   t = t.replace(/[\*†‡§¶\s\/\d]+$/, '').trim();
-  // Detect "Title. Firstname Lastname" and strip author (fix 4)
   if (/\.\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+([\s\-][A-ZÁÉÍÓÚÑ][a-záéíóúñ]+){1,3}$/.test(t)) {
     const dot = t.lastIndexOf('. ');
     if (dot > 5) t = t.substring(0, dot).trim();
   }
   return t;
 }
-
-// Truncate very long titles: cut at colon if >12 words, else limit to 12 words
 function truncateTitle(title) {
   if (!title) return title;
   const words = title.split(' ');
   if (words.length <= 12) return title;
-  const colon = title.indexOf(':');
+  const colon = title.indexOf(' - ');
   if (colon > 15) {
     const before = title.substring(0, colon).trim();
     if (before.split(' ').length >= 3) return before;
@@ -644,89 +500,60 @@ function truncateTitle(title) {
   return words.slice(0, 12).join(' ');
 }
 
-// Fix capitalization
-// Detect English titles and prefix with "(Inglés) "
+// ── Language detection ────────────────────────────────────────────
 const EN_MARKERS = new Set(['the','of','and','in','for','to','with','an','is','are','that','this','on','at','by','from','its','their','be','has','have','was','were','not','but','or','it','as','into','about','between','through','within','among','across','during','against','art','therapy','based','approach','using','role','toward','beyond','effects','review','selection','personnel','validity','utility','methods','practical','theoretical','implications','research','findings','predictive','battery','tests','relation','employability','candidates','psychological','behavior','management','human','resources','assessment','performance','cognitive','clinical','social']);
 const ES_MARKERS = new Set(['de','la','el','en','con','por','para','que','y','del','los','las','una','un','se','es','lo','su','al','le','nos','hay','como','pero','más','si','también','sobre','entre','hacia','durante','contra','según','sin','arte','terapia','arteterapia','creatividad','psicología','educación','selección','personal','validez','batería','pruebas','relación','empleabilidad','candidatos','gestión','personas','resultados']);
 
 function isEnglishTitle(text) {
-  if (!text) return false;
-  if (text.startsWith('(Inglés)')) return false; // already tagged
+  if (!text || text.startsWith('(Inglés)')) return false;
   const words = text.toLowerCase().match(/\b[a-z]{2,}\b/g) || [];
   if (words.length < 2) return false;
   let en = 0, es = 0;
-  for (const w of words) {
-    if (EN_MARKERS.has(w)) en++;
-    if (ES_MARKERS.has(w)) es++;
-  }
+  for (const w of words) { if (EN_MARKERS.has(w)) en++; if (ES_MARKERS.has(w)) es++; }
   return en >= 2 && es === 0;
 }
+function langPrefix(title) { return isEnglishTitle(title) ? '(Inglés) ' + title : title; }
 
-function langPrefix(title) {
-  return isEnglishTitle(title) ? '(Inglés) ' + title : title;
-}
-
-// Translate English title to Spanish via MyMemory (free, no API key needed)
 async function translateTitle(englishTitle) {
   try {
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(englishTitle)}&langpair=en|es`;
+    const url  = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(englishTitle)}&langpair=en|es`;
     const res  = await fetch(url);
     const data = await res.json();
     if (data.responseStatus === 200) {
       const t = data.responseData?.translatedText?.trim();
-      if (t && t.length > 2 && t.toLowerCase() !== englishTitle.toLowerCase()) {
-        // Capitalize first letter
+      if (t && t.length > 2 && t.toLowerCase() !== englishTitle.toLowerCase())
         return `(Inglés) ${t.charAt(0).toUpperCase() + t.slice(1)}`;
-      }
     }
   } catch(e) {}
-  return null; // null = translation failed, keep original
+  return null;
 }
-
-// After extraction: translate English titles in background
 async function translateEnglishTitles() {
-  const englishFiles = state.files.filter(f => {
-    const raw = f.finalName.replace(/^\(Inglés\)\s*/i, '');
-    return isEnglishTitle(raw);
-  });
+  const englishFiles = state.files.filter(f => isEnglishTitle(f.finalName.replace(/^\(Inglés\)\s*/i, '')));
   if (!englishFiles.length) return;
-
   for (const f of englishFiles) {
     const raw = f.finalName.replace(/^\(Inglés\)\s*/i, '');
     const inp = document.getElementById('inp-' + f.id);
     if (inp) { inp.value = '⏳ Traduciendo…'; inp.disabled = true; inp.classList.remove('is-ok'); }
-
     const translated = await translateTitle(raw);
-
-    if (translated) {
-      f.finalName     = translated;
-      f.suggestedName = translated;
-      if (inp) { inp.value = translated; inp.disabled = false; }
-    } else {
-      // Keep the (Inglés) prefix but with original title
-      if (inp) { inp.value = f.finalName; inp.disabled = false; }
-    }
+    if (translated) { f.finalName = translated; f.suggestedName = translated; }
+    if (inp) { inp.value = f.finalName; inp.disabled = false; }
   }
   checkDuplicates();
 }
 
+// ── Case fix ──────────────────────────────────────────────────────
 function fixCase(text) {
   if (!text) return text;
   const letters = text.replace(/[^a-zA-ZáéíóúàèìòùäëïöüñÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÑ]/g, '');
   if (letters.length < 3) return text;
   const uppers = (letters.match(/[A-ZÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÑ]/g) || []).length;
-  if (uppers / letters.length >= 0.65) {
-    const low = text.toLowerCase();
-    return low.charAt(0).toUpperCase() + low.slice(1);
-  }
+  if (uppers / letters.length >= 0.65) { const low = text.toLowerCase(); return low.charAt(0).toUpperCase() + low.slice(1); }
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 // ── PDF helpers ───────────────────────────────────────────────────
-
 function groupByLine(items) {
-  const sorted = [...items].sort((a, b) =>
-    (b.transform?.[5] || 0) - (a.transform?.[5] || 0));
+  const sorted = [...items].sort((a, b) => (b.transform?.[5]||0) - (a.transform?.[5]||0));
   const lines = [];
   for (const item of sorted) {
     const y = item.transform?.[5] || 0;
@@ -737,30 +564,13 @@ function groupByLine(items) {
   for (const l of lines) l.items.sort((a,b) => (a.transform?.[4]||0) - (b.transform?.[4]||0));
   return lines.map(l => l.items);
 }
-
-function isDecorative(text) {
-  return /^[\-_=•·*~\s\u2014\u2013\u2015\u2501\u2500|\/\\]+$/.test(text);
-}
-
+function isDecorative(text) { return /^[\-_=•·*~\s\u2014\u2013\u2015\u2501\u2500|\/\\]+$/.test(text); }
 function isChapterLabel(text) {
   const t = text.trim();
-  return /^(cap[ií]tulo|chapter|parte|part|secci[oó]n|section|unidad|unit|tema)\s*[\d\w]*\.?$/i.test(t)
-      || /^\d{1,3}$/.test(t);
+  return /^(cap[ií]tulo|chapter|parte|part|secci[oó]n|section|unidad|unit|tema)\s*[\d\w]*\.?$/i.test(t) || /^\d{1,3}$/.test(t);
 }
-
-// Connectors at end of line → next line is continuation even if it starts uppercase
 const CONNECTOR_END = /\b(y|e|o|u|de|del|de\s+la|de\s+los|en|el|la|los|las|un|una|por|para|con|que|a|al|and|the|of|in|to|or|an|with|for|from|at|by|as|its)\s*$/i;
 
-function shouldJoin(currentText, nextText, allCaps) {
-  // Translation check FIRST — even all-caps bilingual lines must not be merged
-  if (isTranslationLine(currentText, nextText)) return false;
-  if (allCaps) return true;
-  if (/^[a-záéíóúàèìòùüñ"«¿(]/.test(nextText)) return true;
-  if (CONNECTOR_END.test(currentText)) return true;
-  return false;
-}
-
-// Detect if nextLine is a translation of currentText (different language)
 function isTranslationLine(current, next) {
   if (!current || !next) return false;
   const curWords  = current.toLowerCase().match(/\b[a-záéíóú]{3,}\b/g) || [];
@@ -769,34 +579,33 @@ function isTranslationLine(current, next) {
   const curEn  = curWords.filter(w => EN_MARKERS.has(w)).length;
   const nextEs = nextWords.filter(w => ES_MARKERS.has(w)).length;
   const nextEn = nextWords.filter(w => EN_MARKERS.has(w)).length;
-  // Lower threshold to 1 — even one clear marker per side is enough
   if (curEs >= 1 && curEn === 0 && nextEn >= 1 && nextEs === 0) return true;
   if (curEn >= 1 && curEs === 0 && nextEs >= 1 && nextEn === 0) return true;
   return false;
 }
+function shouldJoin(currentText, nextText, allCaps) {
+  if (isTranslationLine(currentText, nextText)) return false;
+  if (allCaps) return true;
+  if (/^[a-záéíóúàèìòùüñ"«¿(]/.test(nextText)) return true;
+  if (CONNECTOR_END.test(currentText)) return true;
+  return false;
+}
 
 // ── PDF extraction ────────────────────────────────────────────────
-
 async function extractPdf(blob, filename) {
   if (!window.pdfjsLib) return { title: noExt(filename), method: 'error' };
   try {
     const buf = await blob.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-
-    // 1. Metadata — clean and validate
     try {
       const meta = await pdf.getMetadata();
       const raw  = meta?.info?.Title?.trim();
       if (raw) {
         const t = cleanMeta(raw);
-        if (t && !isGarbage(t) && !hasEncodingIssue(t) && !hasCorruptedAccents(t)) {
-          return { title: truncateTitle(fixCase(san(t))), method: 'metadata',
-            source: `Metadatos del archivo (campo Title): "${t.substring(0,60)}"` };
-        }
+        if (t && !isGarbage(t) && !hasEncodingIssue(t) && !hasCorruptedAccents(t))
+          return { title: truncateTitle(fixCase(san(t))), method: 'metadata', source: `Metadatos: "${t.substring(0,60)}"` };
       }
     } catch(e) {}
-
-    // 2. Scan first 4 pages
     const maxPages = Math.min(pdf.numPages, 4);
     for (let p = 1; p <= maxPages; p++) {
       const result = await extractTitleFromPage(pdf, p, maxPages);
@@ -810,91 +619,46 @@ async function extractTitleFromPage(pdf, pageNum, maxPages) {
   try {
     const page    = await pdf.getPage(pageNum);
     const content = await page.getTextContent();
-
-    const items = content.items.filter(i => {
-      const t = (i.str || '').trim();
-      return t.length > 0 && !isDecorative(t);
-    });
+    const items   = content.items.filter(i => { const t=(i.str||'').trim(); return t.length>0&&!isDecorative(t); });
     if (!items.length) return null;
-
-    const sample = items.slice(0, 25).map(i => i.str).join(' ');
-
-    // Skip non-title pages
-    const isCredits  = /p[áa]gina\s+de\s+cr[eé]ditos|isbn[\s:]\s*\d/i.test(sample);
-    const isIndex    = /tabla\s+de\s+contenido|[íi]ndice\s+general|table\s+of\s+contents/i.test(sample);
-    const isRedalyc  = /issn[\s:]\d{4}[-\u2010]\d{4}/i.test(sample) && items.length < 35;
-    if ((isCredits || isIndex || isRedalyc) && pageNum < maxPages) return null;
-
-    const withH = items.filter(i => (i.height || 0) > 0);
-
+    const sample = items.slice(0,25).map(i=>i.str).join(' ');
+    const isCredits = /p[áa]gina\s+de\s+cr[eé]ditos|isbn[\s:]\s*\d/i.test(sample);
+    const isIndex   = /tabla\s+de\s+contenido|[íi]ndice\s+general|table\s+of\s+contents/i.test(sample);
+    const isRedalyc = /issn[\s:]\d{4}[-\u2010]\d{4}/i.test(sample) && items.length < 35;
+    if ((isCredits||isIndex||isRedalyc) && pageNum < maxPages) return null;
+    const withH = items.filter(i => (i.height||0) > 0);
     if (withH.length > 0) {
-      const heights = [...new Set(withH.map(i => Math.round(i.height * 10) / 10))].sort((a,b) => b-a);
-
-      for (const h of heights.slice(0, 6)) {
-        const atH = withH.filter(i => Math.abs(i.height - h) < 0.6);
-        const combined = atH.map(i => i.str.trim()).join(' ').trim();
+      const heights = [...new Set(withH.map(i => Math.round(i.height*10)/10))].sort((a,b)=>b-a);
+      for (const h of heights.slice(0,6)) {
+        const atH = withH.filter(i => Math.abs(i.height-h) < 0.6);
+        const combined = atH.map(i=>i.str.trim()).join(' ').trim();
         if (isChapterLabel(combined) || combined.length < 5) continue;
-
-        // Check if this block is all-caps (joins all lines regardless of case)
-        const allCaps = atH.every(i => {
-          const t = i.str.trim();
-          return !t || t === t.toUpperCase();
-        });
-
+        const allCaps = atH.every(i => { const t=i.str.trim(); return !t||t===t.toUpperCase(); });
         const lines = groupByLine(atH);
         if (!lines.length) continue;
-
-        let titleLines = [];
-        let wordCount  = 0;
-
+        let titleLines = [], wordCount = 0;
         for (let li = 0; li < lines.length; li++) {
-          const lineText = lines[li].map(i => i.str).join(' ').replace(/\s+/g,' ').trim();
-          if (!lineText || isDecorative(lineText) || isChapterLabel(lineText)) {
-            if (li === 0) continue; else break;
-          }
+          const lineText = lines[li].map(i=>i.str).join(' ').replace(/\s+/g,' ').trim();
+          if (!lineText||isDecorative(lineText)||isChapterLabel(lineText)) { if(li===0)continue; else break; }
           if (wordCount >= 18) break;
-
           if (li === 0) {
-            if (lineText.length < 4 || isGarbage(lineText)) break;
-            // Encoding issue on first line → abort this font level
-            if (hasEncodingIssue(lineText)) break;
-            titleLines.push(lineText);
-            wordCount += lineText.split(' ').length;
+            if (lineText.length < 4 || isGarbage(lineText) || hasEncodingIssue(lineText)) break;
+            titleLines.push(lineText); wordCount += lineText.split(' ').length;
           } else {
-            if (shouldJoin(titleLines.join(' '), lineText, allCaps)) {
-              titleLines.push(lineText);
-              wordCount += lineText.split(' ').length;
-            } else break;
+            if (shouldJoin(titleLines.join(' '), lineText, allCaps)) { titleLines.push(lineText); wordCount += lineText.split(' ').length; }
+            else break;
           }
         }
-
         if (!titleLines.length) continue;
-        const raw = fixCharEncoding(titleLines.join(' '))
-          .replace(/\[\d+\]/g, '')       // remove footnote refs [1] (fix A sub)
-          .replace(/^\d+\.\s+/, '')      // remove chapter prefix "7. " (fix B)
-          .replace(/[\*†‡]+$/, '')       // trailing asterisks
-          .trim();
+        const raw = fixCharEncoding(titleLines.join(' ')).replace(/\[\d+\]/g,'').replace(/^\d+\.\s+/,'').replace(/[\*†‡]+$/,'').trim();
         if (isGarbage(raw)) continue;
-        const final = truncateTitle(fixCase(san(raw)));
-
-        return {
-          title:  final,
-          method: 'font',
-          source: `Texto con mayor tamaño (${Math.round(h)}pt) en pág. ${pageNum}: "${raw.substring(0,60)}"`
-        };
+        return { title: truncateTitle(fixCase(san(raw))), method: 'font', source: `Fuente ${Math.round(h)}pt pág.${pageNum}: "${raw.substring(0,60)}"` };
       }
     }
-
-    // Fallback: first non-garbage text line (skip if encoding broken)
-    for (const item of items.slice(0, 20)) {
+    for (const item of items.slice(0,20)) {
       const t = fixCharEncoding(item.str.trim());
-      if (t.length > 4 && !isDecorative(t) && !isChapterLabel(t) && !isGarbage(t) && !hasEncodingIssue(t)) {
-        return {
-          title:  truncateTitle(fixCase(san(t))),
-          method: 'firstline',
-          source: `Primera línea válida en pág. ${pageNum}: "${t.substring(0,60)}"`
-        };
-      }
+      if (t.length>4 && !isDecorative(t) && !isChapterLabel(t) && !isGarbage(t) && !hasEncodingIssue(t))
+        return { title: truncateTitle(fixCase(san(t))), method: 'firstline', source: `Primera línea pág.${pageNum}: "${t.substring(0,60)}"` };
     }
   } catch(e) {}
   return null;
@@ -904,478 +668,312 @@ async function extractTitleFromPage(pdf, pageNum, maxPages) {
 async function extractDocx(blob, filename) {
   try {
     const buf = await blob.arrayBuffer();
-
-    // 1. core.xml → dc:title (only if non-garbage)
     try {
       const dz   = await JSZip.loadAsync(buf.slice(0));
       const core = dz.file('docProps/core.xml');
       if (core) {
         const xml = await core.async('text');
         const m   = xml.match(/<dc:title[^>]*>([^<]+)<\/dc:title>/i);
-        if (m) {
-          const t = m[1].trim();
-          if (!isGarbage(t)) return { title: fixCase(san(t)), method: 'metadata', source: `Metadatos del archivo Word (docProps/core.xml → dc:title): "${t.substring(0,60)}"` };
-        }
+        if (m) { const t=m[1].trim(); if(!isGarbage(t)) return { title:fixCase(san(t)), method:'metadata', source:`Metadatos Word: "${t.substring(0,60)}"` }; }
       }
     } catch(e) {}
-
-    // 2. mammoth → heading hierarchy
     const buf2   = await blob.arrayBuffer();
     const result = await mammoth.convertToHtml({ arrayBuffer: buf2 });
     const div    = document.createElement('div');
     div.innerHTML = result.value;
-
     for (const sel of ['h1','h2','h3']) {
       const el = div.querySelector(sel);
-      if (el) {
-        const t = el.textContent.trim();
-        if (!isGarbage(t)) return { title: fixCase(san(t)), method: 'docx', source: `Encabezado ${sel.toUpperCase()} del documento Word: "${t.substring(0,60)}"` };
-      }
+      if (el) { const t=el.textContent.trim(); if(!isGarbage(t)) return { title:fixCase(san(t)), method:'docx', source:`Encabezado ${sel.toUpperCase()}: "${t.substring(0,60)}"` }; }
     }
-
-    // 3. First non-garbage paragraph
     for (const el of div.querySelectorAll('p')) {
       const t = el.textContent.trim();
-      if (t.length > 4 && !isGarbage(t)) return { title: fixCase(san(t)), method: 'firstline', source: `Primer párrafo válido del documento: "${t.substring(0,60)}"` };
+      if (t.length>4 && !isGarbage(t)) return { title:fixCase(san(t)), method:'firstline', source:`Párrafo: "${t.substring(0,60)}"` };
     }
   } catch(e) {}
   return { title: noExt(filename), method: 'error' };
 }
 
-// ── Method display definitions ─────────────────────────────────────
+// ── Method display ────────────────────────────────────────────────
 const METHOD_DISPLAY = {
-  metadata:  {
-    cls:'b-metadata', icon:'✓',
-    lbl:'Propiedades del archivo',
-    detail:'Campo "Title" en las propiedades internas del documento (visible en Archivo → Propiedades)'
-  },
-  font:      {
-    cls:'b-font', icon:'✓',
-    lbl:'Texto más grande',
-    detail:'Texto con el mayor tamaño de fuente encontrado en la página de portada'
-  },
-  firstline: {
-    cls:'b-firstline', icon:'✓',
-    lbl:'Primera línea legible',
-    detail:'Primera línea de texto válida — usada cuando no hay indicador claro de título'
-  },
-  docx:      {
-    cls:'b-docx', icon:'✓',
-    lbl:'Encabezado Word (H1/H2)',
-    detail:'Primer párrafo con estilo Encabezado 1 o 2 del documento Word'
-  },
-  filename:  {
-    cls:'b-kept', icon:'✓',
-    lbl:'Nombre del archivo',
-    detail:'No se encontró título en el contenido — se usó el nombre del archivo limpio'
-  },
-  error:     {
-    cls:'b-error', icon:'⚠',
-    lbl:'Sin título detectado',
-    detail:'No se encontró ningún indicador de título válido — edita el nombre manualmente'
-  },
+  metadata: { cls:'b-metadata', icon:'✓', lbl:'Propiedades del archivo', detail:'Campo Title en las propiedades internas del documento' },
+  font:     { cls:'b-font',     icon:'✓', lbl:'Texto más grande',        detail:'Texto con el mayor tamaño de fuente en la portada' },
+  firstline:{ cls:'b-firstline',icon:'✓', lbl:'Primera línea legible',   detail:'Primera línea válida — usada cuando no hay título claro' },
+  docx:     { cls:'b-docx',     icon:'✓', lbl:'Encabezado Word H1/H2',   detail:'Primer párrafo con estilo Encabezado del documento Word' },
+  filename: { cls:'b-kept',     icon:'✓', lbl:'Nombre del archivo',       detail:'No se encontró título — se usó el nombre del archivo' },
+  error:    { cls:'b-error',    icon:'⚠', lbl:'Sin título detectado',    detail:'No se encontró título válido — edita manualmente' },
 };
 
 function methodBadge(f) {
   if (f.useOriginal) return `<span class="badge b-kept">— Nombre original mantenido</span>`;
-  const m = METHOD_DISPLAY[f.method] || METHOD_DISPLAY.error;
-  const tip = esc((f.source ? f.source + '\n\n' : '') + m.detail);
-  return `<span class="badge ${m.cls}" title="${tip}" style="cursor:help;white-space:normal;line-height:1.4">
-    ${m.icon} ${m.lbl} <span style="opacity:.55;font-size:10px">ⓘ</span>
-  </span>`;
+  const m   = METHOD_DISPLAY[f.method] || METHOD_DISPLAY.error;
+  const tip = esc((f.source?f.source+'\n\n':'')+m.detail);
+  return `<span class="badge ${m.cls}" title="${tip}" style="cursor:help;white-space:normal;line-height:1.4">${m.icon} ${m.lbl} <span style="opacity:.55;font-size:10px">ⓘ</span></span>`;
 }
-
 function inputCell(f, i) {
-  const ext     = getExt(f.originalName);
-  const val     = esc(f.useOriginal ? noExt(f.originalName) : f.finalName);
-  const errCls  = f.method === 'error' && !f.useOriginal ? 'is-error' : '';
-  return `
-    <div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap">
-      <input class="name-input ${errCls}" id="inp-${i}" type="text"
-        value="${val}" ${f.useOriginal ? 'disabled' : ''}
-        placeholder="Escribe el nombre aquí…"
-        oninput="onNameChange(${i},this.value)" style="min-width:0;flex:1">
-      <span class="ext-suffix">${esc(ext)}</span>
-      <span class="dup-warn" id="dup-${i}" style="display:none">⚠ Duplicado</span>
-    </div>
-    <div class="alt-panel" id="alt-panel-${i}"></div>
-  `;
+  const ext    = getExt(f.originalName);
+  const val    = esc(f.useOriginal ? noExt(f.originalName) : f.finalName);
+  const errCls = f.method==='error'&&!f.useOriginal ? 'is-error' : '';
+  return `<div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap">
+    <input class="name-input ${errCls}" id="inp-${i}" type="text" value="${val}" ${f.useOriginal?'disabled':''} placeholder="Escribe el nombre aquí…" oninput="onNameChange(${i},this.value)" style="min-width:0;flex:1">
+    <span class="ext-suffix">${esc(ext)}</span>
+    <span class="dup-warn" id="dup-${i}" style="display:none">⚠ Duplicado</span>
+  </div>
+  <div class="alt-panel" id="alt-panel-${i}"></div>`;
 }
-
 function actionButtons(f, i) {
-  const origLabel = f.useOriginal ? '✏ Sugerido' : '↩ Original';
-  return `
-    <div class="row-actions">
-      <button class="btn-sm btn-icon" onclick="openPreview(${i})" title="Vista previa del documento">👁</button>
-      <button class="btn-sm btn-regen" onclick="showAlternatives(${i})" title="Ver opciones de título alternativas">🔄 Opciones</button>
-      <button class="btn-sm btn-orig" onclick="toggleOriginal(${i})" id="orig-btn-${i}" title="${f.useOriginal ? 'Volver al nombre sugerido' : 'Mantener el nombre original del archivo'}">${origLabel}</button>
-    </div>
-  `;
+  return `<div class="row-actions">
+    <button class="btn-sm btn-icon" onclick="openPreview(${i})" title="Vista previa">👁</button>
+    <button class="btn-sm btn-regen" onclick="showAlternatives(${i})">🔄 Opciones</button>
+    <button class="btn-sm btn-orig" onclick="toggleOriginal(${i})" id="orig-btn-${i}">${f.useOriginal?'✏ Sugerido':'↩ Original'}</button>
+  </div>`;
 }
 
-// ── Render review table ───────────────────────────────────────────
+// ── Render ────────────────────────────────────────────────────────
 function renderReview() {
   updateStats();
   const tbody = document.getElementById('file-tbody');
   tbody.innerHTML = '';
-
   state.files.forEach((f, i) => {
-    const ext  = getExt(f.originalName).replace('.','');
-    const isErr = f.method === 'error' && !f.useOriginal;
-    const tr   = document.createElement('tr');
-    tr.id = 'row-' + i;
+    const ext   = getExt(f.originalName).replace('.','');
+    const isErr = f.method==='error'&&!f.useOriginal;
+    const tr    = document.createElement('tr');
+    tr.id = 'row-'+i;
     if (isErr) tr.classList.add('row-error');
     if (f.useOriginal) tr.classList.add('row-kept');
-
     tr.innerHTML = `
-      <td><input type="checkbox" ${f.selected ? 'checked' : ''} onchange="toggleRow(${i},this.checked)"></td>
+      <td><input type="checkbox" ${f.selected?'checked':''} onchange="toggleRow(${i},this.checked)"></td>
       <td><span class="ext-badge ext-${ext}">${ext}</span></td>
-      <td><span class="fname" title="${esc(f.originalName)}">${esc(f.originalName)}</span>
-          <span style="font-size:10px;color:var(--text-muted)">${fmt(f.size)}</span></td>
-      <td>${inputCell(f, i)}</td>
+      <td><span class="fname" title="${esc(f.originalName)}">${esc(f.originalName)}</span><span style="font-size:10px;color:var(--text-muted)">${fmt(f.size)}</span></td>
+      <td>${inputCell(f,i)}</td>
       <td>${methodBadge(f)}</td>
-      <td>${actionButtons(f, i)}</td>
-    `;
+      <td>${actionButtons(f,i)}</td>`;
     tbody.appendChild(tr);
   });
   checkDuplicates();
 }
-
 function renderRow(i) {
-  const tr = document.getElementById('row-' + i);
+  const tr = document.getElementById('row-'+i);
   if (!tr) return;
   const f = state.files[i];
-  const ext = getExt(f.originalName).replace('.','');
-  tr.className = f.useOriginal ? 'row-kept' : (f.method === 'error' ? 'row-error' : '');
+  tr.className = f.useOriginal?'row-kept':(f.method==='error'?'row-error':'');
   const cells = tr.querySelectorAll('td');
-  cells[3].innerHTML = inputCell(f, i);
+  cells[3].innerHTML = inputCell(f,i);
   cells[4].innerHTML = methodBadge(f);
-  cells[5].innerHTML = actionButtons(f, i);
+  cells[5].innerHTML = actionButtons(f,i);
   checkDuplicates();
 }
-
 function onNameChange(i, val) {
-  state.files[i].finalName = val;
-  state.files[i].useOriginal = false;
-  const inp = document.getElementById('inp-' + i);
+  state.files[i].finalName = val; state.files[i].useOriginal = false;
+  const inp = document.getElementById('inp-'+i);
   if (inp) { inp.classList.remove('is-error','is-dup'); inp.classList.add('is-ok'); }
-  checkDuplicates();
-  updateStats();
+  checkDuplicates(); updateStats();
 }
-
 function checkDuplicates() {
   const names = {};
-  state.files.forEach((f, i) => {
-    const name = (f.useOriginal ? noExt(f.originalName) : f.finalName || '').toLowerCase().trim();
+  state.files.forEach((f,i) => {
+    const name = (f.useOriginal?noExt(f.originalName):f.finalName||'').toLowerCase().trim();
     if (!name) return;
-    if (!names[name]) names[name] = [];
+    if (!names[name]) names[name]=[];
     names[name].push(i);
   });
-  // Reset all
-  state.files.forEach((f, i) => {
-    const inp  = document.getElementById('inp-' + i);
-    const warn = document.getElementById('dup-' + i);
-    if (inp)  inp.classList.remove('is-dup');
-    if (warn) warn.style.display = 'none';
+  state.files.forEach((f,i) => {
+    const inp=document.getElementById('inp-'+i), warn=document.getElementById('dup-'+i);
+    if(inp) inp.classList.remove('is-dup');
+    if(warn) warn.style.display='none';
   });
-  // Mark duplicates
-  Object.values(names).filter(arr => arr.length > 1).forEach(arr => {
+  Object.values(names).filter(arr=>arr.length>1).forEach(arr => {
     arr.forEach(i => {
-      const inp  = document.getElementById('inp-' + i);
-      const warn = document.getElementById('dup-' + i);
-      if (inp)  inp.classList.add('is-dup');
-      if (warn) warn.style.display = 'inline';
+      const inp=document.getElementById('inp-'+i), warn=document.getElementById('dup-'+i);
+      if(inp) inp.classList.add('is-dup');
+      if(warn) warn.style.display='inline';
     });
   });
 }
-
-// ── Alternatives (Regenerate) ─────────────────────────────────────
 async function showAlternatives(i) {
-  const panel = document.getElementById('alt-panel-' + i);
+  const panel = document.getElementById('alt-panel-'+i);
   if (!panel) return;
-  if (panel.style.display === 'block') { panel.style.display = 'none'; return; }
+  if (panel.style.display==='block') { panel.style.display='none'; return; }
   panel.innerHTML = '<div style="padding:8px;font-size:12px;color:var(--text-muted)">Buscando opciones…</div>';
   panel.style.display = 'block';
   const f    = state.files[i];
   const alts = await getAlternatives(f.blob, f.originalName);
-  if (!alts.length) {
-    panel.innerHTML = '<div style="padding:8px;font-size:12px;color:var(--text-muted)">No se encontraron opciones adicionales.</div>';
-    return;
-  }
+  if (!alts.length) { panel.innerHTML='<div style="padding:8px;font-size:12px;color:var(--text-muted)">No se encontraron opciones.</div>'; return; }
   panel.innerHTML = alts.map(alt => {
-    const m = METHOD_DISPLAY[alt.method] || METHOD_DISPLAY.filename;
-    return `<div class="alt-option" onclick="selectAlternative(${i},'${esc(alt.title).replace(/'/g,"&#39;")}')" title="${esc(alt.source||'')}">
+    const m = METHOD_DISPLAY[alt.method]||METHOD_DISPLAY.filename;
+    return `<div class="alt-option" onclick="selectAlternative(${i},'${esc(alt.title).replace(/'/g,"&#39;")}')">
       <span class="badge ${m.cls}" style="flex-shrink:0;font-size:10px">${m.lbl}</span>
-      <span class="alt-title">${esc(alt.title)}</span>
-    </div>`;
+      <span class="alt-title">${esc(alt.title)}</span></div>`;
   }).join('');
 }
-
 function selectAlternative(i, title) {
-  state.files[i].finalName   = title;
-  state.files[i].useOriginal = false;
-  const inp = document.getElementById('inp-' + i);
-  if (inp) { inp.value = title; inp.disabled = false; inp.classList.remove('is-error','is-dup'); inp.classList.add('is-ok'); }
-  const panel = document.getElementById('alt-panel-' + i);
-  if (panel) panel.style.display = 'none';
-  const cells = document.getElementById('row-' + i)?.querySelectorAll('td');
-  if (cells) cells[5].innerHTML = actionButtons(state.files[i], i);
+  state.files[i].finalName=title; state.files[i].useOriginal=false;
+  const inp=document.getElementById('inp-'+i);
+  if(inp){inp.value=title;inp.disabled=false;inp.classList.remove('is-error','is-dup');inp.classList.add('is-ok');}
+  const panel=document.getElementById('alt-panel-'+i);
+  if(panel) panel.style.display='none';
+  const cells=document.getElementById('row-'+i)?.querySelectorAll('td');
+  if(cells) cells[5].innerHTML=actionButtons(state.files[i],i);
   checkDuplicates();
 }
-
 async function getAlternatives(blob, filename) {
-  const candidates = [];
-  const ext = getExt(filename);
-  const add = (title, method, source) => {
-    const t = (title || '').trim();
-    if (!t || t.length < 4 || isGarbage(t) || hasEncodingIssue(t)) return;
-    candidates.push({ title: langPrefix(t), method, source: source || '' });
+  const candidates=[], ext=getExt(filename);
+  const add=(title,method,source)=>{
+    const t=(title||'').trim();
+    if(!t||t.length<4||isGarbage(t)||hasEncodingIssue(t)) return;
+    candidates.push({title:langPrefix(t),method,source:source||''});
   };
-
-  if (ext === '.pdf' && window.pdfjsLib) {
+  if (ext==='.pdf'&&window.pdfjsLib) {
     try {
-      const buf = await blob.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-      // Metadata
-      try {
-        const meta = await pdf.getMetadata();
-        const raw  = meta?.info?.Title?.trim();
-        if (raw) { const t = cleanMeta(raw); if (t) add(truncateTitle(fixCase(san(t))), 'metadata', `Metadatos: "${raw.substring(0,55)}"`); }
-      } catch(e) {}
-      // Font + firstline per page
-      for (let p = 1; p <= Math.min(pdf.numPages, 3); p++) {
-        try {
-          const page    = await pdf.getPage(p);
-          const content = await page.getTextContent();
-          const items   = content.items.filter(i => (i.str||'').trim() && !isDecorative((i.str||'').trim()));
-          const withH   = items.filter(i => (i.height||0) > 0);
-          if (withH.length) {
-            const heights = [...new Set(withH.map(i => Math.round(i.height*10)/10))].sort((a,b)=>b-a);
-            for (const h of heights.slice(0,4)) {
-              const atH  = withH.filter(i => Math.abs(i.height-h) < 0.6);
-              const comb = atH.map(i=>i.str.trim()).join(' ').trim();
-              if (isChapterLabel(comb) || comb.length < 5) continue;
-              const allC = atH.every(i => { const t=i.str.trim(); return !t||t===t.toUpperCase(); });
-              const lines = groupByLine(atH);
-              let acc = [];
-              for (let li = 0; li < Math.min(lines.length,4); li++) {
-                const lt = lines[li].map(i=>i.str).join(' ').replace(/\s+/g,' ').trim();
-                if (!lt||isDecorative(lt)||isChapterLabel(lt)) { if(li===0)continue; else break; }
-                if (li===0) { if(lt.length<4||isGarbage(lt)||hasEncodingIssue(lt)) break; acc.push(lt); }
-                else if (shouldJoin(acc.join(' '),lt,allC)) acc.push(lt); else break;
+      const buf=await blob.arrayBuffer(), pdf=await pdfjsLib.getDocument({data:buf}).promise;
+      try{ const meta=await pdf.getMetadata(),raw=meta?.info?.Title?.trim(); if(raw){const t=cleanMeta(raw);if(t)add(truncateTitle(fixCase(san(t))),'metadata',`Metadatos: "${raw.substring(0,55)}"`);}  }catch(e){}
+      for(let p=1;p<=Math.min(pdf.numPages,3);p++){
+        try{
+          const page=await pdf.getPage(p),content=await page.getTextContent();
+          const items=content.items.filter(i=>(i.str||'').trim()&&!isDecorative((i.str||'').trim()));
+          const withH=items.filter(i=>(i.height||0)>0);
+          if(withH.length){
+            const heights=[...new Set(withH.map(i=>Math.round(i.height*10)/10))].sort((a,b)=>b-a);
+            for(const h of heights.slice(0,4)){
+              const atH=withH.filter(i=>Math.abs(i.height-h)<0.6),comb=atH.map(i=>i.str.trim()).join(' ').trim();
+              if(isChapterLabel(comb)||comb.length<5) continue;
+              const allC=atH.every(i=>{const t=i.str.trim();return !t||t===t.toUpperCase();});
+              const lines=groupByLine(atH);let acc=[];
+              for(let li=0;li<Math.min(lines.length,4);li++){
+                const lt=lines[li].map(i=>i.str).join(' ').replace(/\s+/g,' ').trim();
+                if(!lt||isDecorative(lt)||isChapterLabel(lt)){if(li===0)continue;else break;}
+                if(li===0){if(lt.length<4||isGarbage(lt)||hasEncodingIssue(lt))break;acc.push(lt);}
+                else if(shouldJoin(acc.join(' '),lt,allC))acc.push(lt);else break;
               }
-              if (acc.length) {
-                const raw2 = fixCharEncoding(acc.join(' '));
-                if (!isGarbage(raw2)) add(truncateTitle(fixCase(san(raw2))), 'font', `Fuente ${Math.round(h)}pt pág.${p}: "${raw2.substring(0,50)}"`);
-              }
+              if(acc.length){const r=fixCharEncoding(acc.join(' '));if(!isGarbage(r))add(truncateTitle(fixCase(san(r))),'font',`Fuente ${Math.round(h)}pt pág.${p}`);}
             }
           }
-          for (const item of items.slice(0,15)) {
-            const t = fixCharEncoding(item.str.trim());
-            if (t.length>4 && !isDecorative(t) && !isChapterLabel(t) && !isGarbage(t) && !hasEncodingIssue(t)) {
-              add(truncateTitle(fixCase(san(t))), 'firstline', `Primera línea pág.${p}: "${t.substring(0,50)}"`);
-              break;
-            }
+          for(const item of items.slice(0,15)){
+            const t=fixCharEncoding(item.str.trim());
+            if(t.length>4&&!isDecorative(t)&&!isChapterLabel(t)&&!isGarbage(t)&&!hasEncodingIssue(t)){add(truncateTitle(fixCase(san(t))),'firstline',`Primera línea pág.${p}`);break;}
           }
-        } catch(e) {}
+        }catch(e){}
       }
-    } catch(e) {}
-  } else if (ext === '.docx') {
-    try {
-      const buf  = await blob.arrayBuffer();
-      const buf2 = await blob.arrayBuffer();
-      try {
-        const dz = await JSZip.loadAsync(buf.slice(0));
-        const core = dz.file('docProps/core.xml');
-        if (core) { const xml=await core.async('text'); const m=xml.match(/<dc:title[^>]*>([^<]+)<\/dc:title>/i); if(m){const t=cleanMeta(m[1].trim());if(t)add(fixCase(san(t)),'metadata',`Metadatos Word: "${m[1].substring(0,50)}"`);}  }
-      } catch(e) {}
-      const result = await mammoth.convertToHtml({ arrayBuffer: buf2 });
-      const div2   = document.createElement('div');
-      div2.innerHTML = result.value;
-      for (const sel of ['h1','h2','h3','p']) {
-        const el = div2.querySelector(sel);
-        if (el) { const t=el.textContent.trim(); if(t.length>4&&!isGarbage(t)) add(fixCase(san(t)), sel.startsWith('h')?'docx':'firstline', `Elemento ${sel.toUpperCase()}: "${t.substring(0,50)}"`); }
-      }
-    } catch(e) {}
+    }catch(e){}
+  } else if(ext==='.docx'){
+    try{
+      const buf=await blob.arrayBuffer(),buf2=await blob.arrayBuffer();
+      try{const dz=await JSZip.loadAsync(buf.slice(0)),core=dz.file('docProps/core.xml');if(core){const xml=await core.async('text'),m=xml.match(/<dc:title[^>]*>([^<]+)<\/dc:title>/i);if(m){const t=cleanMeta(m[1].trim());if(t)add(fixCase(san(t)),'metadata');}}}catch(e){}
+      const result=await mammoth.convertToHtml({arrayBuffer:buf2}),div2=document.createElement('div');
+      div2.innerHTML=result.value;
+      for(const sel of['h1','h2','h3','p']){const el=div2.querySelector(sel);if(el){const t=el.textContent.trim();if(t.length>4&&!isGarbage(t))add(fixCase(san(t)),sel.startsWith('h')?'docx':'firstline');}}
+    }catch(e){}
   }
-
-  // Always add cleaned filename
-  const fn = fixCase(san(noExt(filename).replace(/[-_.]+/g,' ').replace(/\s+/g,' ').trim()));
-  if (fn && fn.length > 3 && !isGarbage(fn)) add(fn, 'filename', `Nombre del archivo: "${filename}"`);
-
-  // Deduplicate
-  const seen = new Set();
-  return candidates.filter(c => {
-    const k = c.title.toLowerCase().replace(/[^a-z0-9áéíóú]/g,'');
-    if (seen.has(k)) return false;
-    seen.add(k); return true;
-  });
+  const fn=fixCase(san(noExt(filename).replace(/[-_.]+/g,' ').replace(/\s+/g,' ').trim()));
+  if(fn&&fn.length>3&&!isGarbage(fn))add(fn,'filename',`Nombre del archivo`);
+  const seen=new Set();
+  return candidates.filter(c=>{const k=c.title.toLowerCase().replace(/[^a-z0-9áéíóú]/g,'');if(seen.has(k))return false;seen.add(k);return true;});
 }
 
-function toggleRow(i, checked) { state.files[i].selected = checked; updateStats(); }
-
-function toggleAll(checked) {
-  state.files.forEach(f => f.selected = checked);
-  document.querySelectorAll('#file-tbody input[type=checkbox]').forEach(c => c.checked = checked);
-  document.getElementById('chk-all').checked  = checked;
-  document.getElementById('chk-all2').checked = checked;
+function toggleRow(i,checked){state.files[i].selected=checked;updateStats();}
+function toggleAll(checked){
+  state.files.forEach(f=>f.selected=checked);
+  document.querySelectorAll('#file-tbody input[type=checkbox]').forEach(c=>c.checked=checked);
+  document.getElementById('chk-all').checked=checked;
+  document.getElementById('chk-all2').checked=checked;
   updateStats();
 }
-
-function toggleOriginal(i) {
-  state.files[i].useOriginal = !state.files[i].useOriginal;
-  renderRow(i);
-  updateStats();
-}
-
-function applySelected(useSuggested) {
-  state.files.forEach((f, i) => { if (!f.selected) return; f.useOriginal = !useSuggested; renderRow(i); });
-  updateStats();
-}
-
-function updateStats() {
-  const sel = state.files.filter(f => f.selected).length;
-  const err = state.files.filter(f => f.method === 'error' && !f.useOriginal).length;
-  document.getElementById('rb-total').textContent = state.files.length;
-  document.getElementById('rb-ok').textContent    = state.files.length - err;
-  document.getElementById('rb-err').textContent   = err;
-  document.getElementById('rb-sel').textContent   = sel;
+function toggleOriginal(i){state.files[i].useOriginal=!state.files[i].useOriginal;renderRow(i);updateStats();}
+function applySelected(useSuggested){state.files.forEach((f,i)=>{if(!f.selected)return;f.useOriginal=!useSuggested;renderRow(i);});updateStats();}
+function updateStats(){
+  const sel=state.files.filter(f=>f.selected).length,err=state.files.filter(f=>f.method==='error'&&!f.useOriginal).length;
+  document.getElementById('rb-total').textContent=state.files.length;
+  document.getElementById('rb-ok').textContent=state.files.length-err;
+  document.getElementById('rb-err').textContent=err;
+  document.getElementById('rb-sel').textContent=sel;
 }
 
 // ── Preview ───────────────────────────────────────────────────────
 async function openPreview(i) {
-  const f    = state.files[i];
-  const ext  = getExt(f.originalName);
-  const body = document.getElementById('preview-body');
-  document.getElementById('preview-title').textContent = f.finalName || f.originalName;
-  document.getElementById('preview-fname').textContent = f.originalName;
-  body.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted)">Cargando vista previa…</div>';
+  const f=state.files[i],ext=getExt(f.originalName),body=document.getElementById('preview-body');
+  document.getElementById('preview-title').textContent=f.finalName||f.originalName;
+  document.getElementById('preview-fname').textContent=f.originalName;
+  body.innerHTML='<div style="text-align:center;padding:3rem;color:var(--text-muted)">Cargando…</div>';
   openModal('preview-modal');
-
-  if (ext === '.pdf') {
-    try {
-      // Ensure correct MIME type for inline rendering
-      const ab       = await f.blob.arrayBuffer();
-      const pdfBlob  = new Blob([ab], { type: 'application/pdf' });
-      const url      = URL.createObjectURL(pdfBlob);
-      if (!f.blobUrl) f.blobUrl = url;
-      body.innerHTML = `
-        <embed src="${url}#toolbar=1&navpanes=0" type="application/pdf"
-          style="width:100%;height:72vh;border:none;border-radius:8px;background:#f8f8f8"
-          title="Vista previa PDF">
-        <p style="margin-top:8px;font-size:12px;color:var(--text-muted);text-align:center">
-          Si el PDF no se muestra, <a href="${url}" target="_blank" style="color:var(--purple)">ábrelo en una pestaña nueva</a>.
-        </p>`;
-    } catch(e) {
-      body.innerHTML = '<div style="padding:2rem;color:var(--red)">No se pudo cargar el PDF.</div>';
-    }
+  if(ext==='.pdf'){
+    try{
+      const ab=await f.blob.arrayBuffer(),pdfBlob=new Blob([ab],{type:'application/pdf'}),url=URL.createObjectURL(pdfBlob);
+      if(!f.blobUrl)f.blobUrl=url;
+      body.innerHTML=`<embed src="${url}#toolbar=1&navpanes=0" type="application/pdf" style="width:100%;height:72vh;border:none;border-radius:8px;background:#f8f8f8">
+        <p style="margin-top:8px;font-size:12px;color:var(--text-muted);text-align:center">Si el PDF no se muestra, <a href="${url}" target="_blank" style="color:var(--purple)">ábrelo en una pestaña nueva</a>.</p>`;
+    }catch(e){body.innerHTML='<div style="padding:2rem;color:var(--red)">No se pudo cargar el PDF.</div>';}
   } else {
-    try {
-      const buf    = await f.blob.arrayBuffer();
-      const result = await mammoth.convertToHtml({ arrayBuffer: buf });
-      body.innerHTML = `<div class="preview-docx">${result.value}</div>`;
-    } catch(e) {
-      body.innerHTML = '<div style="padding:2rem;color:var(--red)">No se pudo cargar la vista previa del DOCX.</div>';
-    }
+    try{const buf=await f.blob.arrayBuffer(),result=await mammoth.convertToHtml({arrayBuffer:buf});body.innerHTML=`<div class="preview-docx">${result.value}</div>`;}
+    catch(e){body.innerHTML='<div style="padding:2rem;color:var(--red)">No se pudo cargar el DOCX.</div>';}
   }
 }
 
 // ── Download ZIP ──────────────────────────────────────────────────
 async function downloadZip() {
-  const files = state.files.filter(f => f.selected);
-  if (!files.length) { toast('Selecciona al menos un archivo.', 'error'); return; }
+  const files=state.files.filter(f=>f.selected);
+  if(!files.length){toast('Selecciona al menos un archivo.','error');return;}
   toast('Generando ZIP…');
-  const zip  = new JSZip();
-  const used = {};
-  for (const f of files) {
-    const ext      = getExt(f.originalName);
-    const base     = san(f.useOriginal ? noExt(f.originalName) : f.finalName) || noExt(f.originalName);
-    let name       = base + ext;
-    const key      = name.toLowerCase();
-    if (used[key]) { used[key]++; name = base + ` (${used[key]})` + ext; } else used[key] = 1;
-    zip.file(name, await f.blob.arrayBuffer());
+  const zip=new JSZip(),used={};
+  for(const f of files){
+    const ext=getExt(f.originalName),base=san(f.useOriginal?noExt(f.originalName):f.finalName)||noExt(f.originalName);
+    let name=base+ext;const key=name.toLowerCase();
+    if(used[key]){used[key]++;name=base+` (${used[key]})`+ext;}else used[key]=1;
+    zip.file(name,await f.blob.arrayBuffer());
   }
-  const content = await zip.generateAsync({ type:'blob', compression:'DEFLATE', compressionOptions:{ level:1 } });
-  const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(content), download:'documentos_renombrados.zip' });
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  toast('ZIP descargado ✓', 'ok');
+  const content=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:1}});
+  const a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(content),download:'documentos_renombrados.zip'});
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  toast('ZIP descargado ✓','ok');
 }
 
 // ── Upload modal ──────────────────────────────────────────────────
-function openUploadModal() {
-  const sel = state.files.filter(f => f.selected);
-  if (!sel.length) { toast('Selecciona al menos un archivo.', 'error'); return; }
-  document.getElementById('upload-file-count').textContent = `${sel.length} archivo(s) — ${fmt(sel.reduce((s,f)=>s+f.size,0))}`;
+function openUploadModal(){
+  const sel=state.files.filter(f=>f.selected);
+  if(!sel.length){toast('Selecciona al menos un archivo.','error');return;}
+  document.getElementById('upload-file-count').textContent=`${sel.length} archivo(s) — ${fmt(sel.reduce((s,f)=>s+f.size,0))}`;
   showUploadStep('form');
   openModal('upload-modal');
 }
-
-function selectFormato(fmt) {
-  ['apoyo','asinc'].forEach(f => {
-    const el   = document.getElementById('fmt-' + f);
-    const chk  = document.getElementById('check-' + f);
-    const inp  = el?.querySelector('input');
-    const sel  = f === fmt;
-    if (el)  el.classList.toggle('selected', sel);
-    if (chk) chk.textContent = sel ? '✓' : '';
-    if (inp) inp.checked = sel;
+function selectFormato(fmt){
+  ['apoyo','asinc'].forEach(f=>{
+    const el=document.getElementById('fmt-'+f),chk=document.getElementById('check-'+f),inp=el?.querySelector('input'),sel=f===fmt;
+    if(el)el.classList.toggle('selected',sel);
+    if(chk)chk.textContent=sel?'✓':'';
+    if(inp)inp.checked=sel;
   });
-  document.getElementById('modulo-field').style.display = fmt === 'asinc' ? 'block' : 'none';
+  document.getElementById('modulo-field').style.display=fmt==='asinc'?'block':'none';
 }
-
-function showUploadStep(step) {
-  ['form','loading','success','error'].forEach(s =>
-    document.getElementById('upload-'+s).style.display = s === step ? 'block' : 'none'
-  );
-  const footer = document.getElementById('upload-footer');
-  if (step === 'form') {
-    footer.innerHTML = `<button onclick="closeModal('upload-modal')">Cancelar</button>
-      <button class="btn-primary" onclick="submitUpload()">Subir al aula →</button>`;
-  } else if (step === 'success' || step === 'error') {
-    footer.innerHTML = `<button class="btn-primary" onclick="closeModal('upload-modal')">Cerrar</button>`;
-  } else {
-    footer.innerHTML = '';
-  }
+function showUploadStep(step){
+  ['form','loading','success','error'].forEach(s=>document.getElementById('upload-'+s).style.display=s===step?'block':'none');
+  const footer=document.getElementById('upload-footer');
+  if(step==='form') footer.innerHTML=`<button onclick="closeModal('upload-modal')">Cancelar</button><button class="btn-primary" onclick="submitUpload()">Subir al aula →</button>`;
+  else if(step==='success'||step==='error') footer.innerHTML=`<button class="btn-primary" onclick="closeModal('upload-modal')">Cerrar</button>`;
+  else footer.innerHTML='';
 }
 
 async function submitUpload() {
-  const webhookUrl = state.webhookUrl;
-  if (!webhookUrl) { toast('No hay webhook configurado.', 'error'); return; }
-
   const fmt    = document.querySelector('input[name="fmt"]:checked')?.value || 'apoyo';
-  const modulo = fmt === 'asinc' ? (document.getElementById('num-modulo').value.trim() || '') : '';
+  const modulo = fmt==='asinc' ? (document.getElementById('num-modulo').value.trim()||'') : '';
   const idCl   = document.getElementById('id-cl').value.trim();
   const idMx   = document.getElementById('id-mx').value.trim();
   const idCo   = document.getElementById('id-co').value.trim();
-  if (!idCl && !idMx && !idCo) { toast('Ingresa al menos un ID de Moodle.', 'error'); return; }
-  if (fmt === 'asinc' && !modulo) { toast('Ingresa el número de módulo.', 'error'); return; }
+  if (!idCl&&!idMx&&!idCo) { toast('Ingresa al menos un ID de Moodle.','error'); return; }
+  if (fmt==='asinc'&&!modulo) { toast('Ingresa el número de módulo.','error'); return; }
 
   showUploadStep('loading');
-  const files = state.files.filter(f => f.selected);
+  const files = state.files.filter(f=>f.selected);
 
   try {
-    // ── Step 1: Validate files ────────────────────────────────────
-    document.getElementById('upload-loading-text').textContent = `Procesando ${files.length} archivo(s)…`;
-
-    // ── Step 2: Prepare (no ZIP needed) ──────────────────────────
-    document.getElementById('upload-loading-text').textContent = 'Preparando archivos…';
-    document.getElementById('upload-progress-text').textContent = '';
-
-    // ── Step 3: ONE single POST — all files as base64 array ──────
-    document.getElementById('upload-loading-text').textContent = 'Codificando archivos…';
-
     const archivos = [];
-    for (let i = 0; i < files.length; i++) {
-      document.getElementById('upload-progress-text').textContent =
-        `Codificando ${i + 1} / ${files.length}: ${files[i].originalName}`;
-      const f   = files[i];
-      const ext = getExt(f.originalName);
-      const base = san(f.useOriginal ? noExt(f.originalName) : f.finalName) || noExt(f.originalName);
-      const ab  = await f.blob.arrayBuffer();
+    for (let i=0; i<files.length; i++) {
+      document.getElementById('upload-loading-text').textContent = `Codificando ${i+1} / ${files.length}…`;
+      document.getElementById('upload-progress-text').textContent = files[i].originalName;
+      const f=files[i], ext=getExt(f.originalName);
+      const base=san(f.useOriginal?noExt(f.originalName):f.finalName)||noExt(f.originalName);
+      const ab=await f.blob.arrayBuffer();
       archivos.push({
         nombre_original: f.originalName,
-        nombre_final:    base + ext,
-        extension:       ext.replace('.', ''),
+        nombre_final:    base+ext,
+        extension:       ext.replace('.',''),
         tamano_bytes:    f.size,
         contenido_base64: arrayBufferToBase64(ab)
       });
@@ -1385,118 +983,89 @@ async function submitUpload() {
     document.getElementById('upload-progress-text').textContent = 'Esperando confirmación…';
 
     const payload = {
-      timestamp:      new Date().toISOString(),
-      formato:        fmt,        // 'apoyo' | 'asinc'
-      id_cl:          idCl,
-      id_mx:          idMx,
-      id_co:          idCo,
-      modulo:         modulo,
+      timestamp: new Date().toISOString(),
+      formato:   fmt,
+      id_cl:     idCl, id_mx: idMx, id_co: idCo,
+      modulo:    modulo,
       total_archivos: files.length,
       archivos
     };
 
-    const res = await fetch(webhookUrl, {
+    // Usar text/plain para evitar CORS preflight con Make
+    const res = await fetch(WEBHOOK_URL, {
       method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain' },
       body:    JSON.stringify(payload)
     });
 
-    document.getElementById('upload-loading-text').textContent = 'Esperando confirmación de Moodle…';
+    document.getElementById('upload-loading-text').textContent = 'Esperando respuesta de Moodle…';
     document.getElementById('upload-progress-text').textContent = '';
 
-    // Parse Make response
     let makeResp = {};
-    try { const t = await res.text(); if (t) makeResp = JSON.parse(t); } catch(e) {}
+    try { const t=await res.text(); if(t) makeResp=JSON.parse(t); } catch(e) {}
 
-    const failed = !res.ok && res.status !== 0;
-    if (!failed && makeResp.status !== 'error') {
-      const fmtLabel  = fmt === 'asinc' ? `Módulo ${modulo}` : 'Recursos de apoyo';
-      const defaultMsg = `${fmtLabel} — ${files.length} archivo(s) subidos correctamente.`;
+    if ((res.ok||res.status===0) && makeResp.status!=='error') {
+      const label = fmt==='asinc' ? `Módulo ${modulo}` : 'Recursos de apoyo';
       document.getElementById('upload-success-msg').textContent =
-        makeResp.message || makeResp.msg || defaultMsg;
+        makeResp.message || makeResp.msg || `${label} — ${files.length} archivo(s) subidos correctamente.`;
       showUploadStep('success');
     } else {
       document.getElementById('upload-error-msg').textContent =
         makeResp.message || `Error ${res.status} — revisa el escenario en Make.`;
       showUploadStep('error');
     }
-
   } catch(e) {
-    document.getElementById('upload-error-msg').textContent =
-      `Error: ${e.message}`;
+    document.getElementById('upload-error-msg').textContent = `Error: ${e.message}`;
     showUploadStep('error');
   }
 }
 
-function arrayBufferToBase64(buffer) {
-  let binary = '';
-  const bytes = new Uint8Array(buffer);
-  for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+function arrayBufferToBase64(buffer){
+  let binary='';const bytes=new Uint8Array(buffer);
+  for(let i=0;i<bytes.byteLength;i++)binary+=String.fromCharCode(bytes[i]);
   return btoa(binary);
 }
 
-// ── Settings ──────────────────────────────────────────────────────
-function saveSettings() {
-  const url = document.getElementById('webhook-url').value.trim();
-  if (url) state.webhookUrl = url;
-  closeModal('settings-modal');
-  toast('Configuración guardada ✓', 'ok');
-}
-
 // ── Modal helpers ─────────────────────────────────────────────────
-function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-function closeOnOverlay(e, id) { if (e.target === e.currentTarget) closeModal(id); }
-
-// ── Phase control ─────────────────────────────────────────────────
-function setPhase(p) {
-  document.getElementById('phase-upload').style.display     = p === 'upload'     ? 'block' : 'none';
-  document.getElementById('phase-processing').style.display = p === 'processing' ? 'block' : 'none';
-  document.getElementById('phase-review').style.display     = p === 'review'     ? 'block' : 'none';
+function openModal(id){document.getElementById(id).style.display='flex';}
+function closeModal(id){document.getElementById(id).style.display='none';}
+function closeOnOverlay(e,id){if(e.target===e.currentTarget)closeModal(id);}
+function setPhase(p){
+  document.getElementById('phase-upload').style.display    =p==='upload'    ?'block':'none';
+  document.getElementById('phase-processing').style.display=p==='processing'?'block':'none';
+  document.getElementById('phase-review').style.display    =p==='review'    ?'block':'none';
 }
-
-function setProgress(done, total, name) {
-  const pct = total > 0 ? Math.round((done / total) * 100) : 100;
-  document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('prog-pct').textContent  = pct + '%';
-  document.getElementById('prog-text').textContent = done < total ? `Analizando ${done+1} de ${total}…` : 'Listo';
-  document.getElementById('prog-file').textContent = name || '';
+function setProgress(done,total,name){
+  const pct=total>0?Math.round((done/total)*100):100;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('prog-text').textContent=done<total?`Analizando ${done+1} de ${total}…`:'Listo';
+  document.getElementById('prog-file').textContent=name||'';
 }
-
-function resetAll() {
-  state.files.forEach(f => { if (f.blobUrl) URL.revokeObjectURL(f.blobUrl); });
-  state.files = [];
-  fileInput.value = '';
-  setPhase('upload');
+function resetAll(){
+  state.files.forEach(f=>{if(f.blobUrl)URL.revokeObjectURL(f.blobUrl);});
+  state.files=[];fileInput.value='';setPhase('upload');
 }
 
 // ── Utilities ─────────────────────────────────────────────────────
-function san(text) {
-  if (!text) return '';
+function san(text){
+  if(!text)return'';
   return text
-    .replace(/<[^>]+>/g, ' ')           // strip HTML/XML tags (fix 3)
-    .replace(/&[a-z#0-9]+;/gi, ' ')     // strip HTML entities
-    .replace(/[\r\n\t]+/g, ' ')
-    .replace(/\s*:\s*/g, ' - ')         // colon → dash (fix 1)
-    .replace(/^[\*\s\-]+/, '')          // clean leading * or - (fix 3)
-    .replace(/[\*†‡]+$/, '')            // clean trailing * † ‡
-    .replace(/[<>"\/\\|?*\x00-\x1F]/g, '') // remove remaining invalid filename chars
-    .replace(/\s+/g, ' ')
-    .trim()
-    .substring(0, 150);
+    .replace(/<[^>]+>/g,' ').replace(/&[a-z#0-9]+;/gi,' ')
+    .replace(/[\r\n\t]+/g,' ').replace(/\s*:\s*/g,' - ')
+    .replace(/^[\*\s\-]+/,'').replace(/[\*†‡]+$/,'')
+    .replace(/[<>"\/\\|?*\x00-\x1F]/g,'')
+    .replace(/\s+/g,' ').trim().substring(0,150);
 }
-function noExt(n)  { return n.replace(/\.[^.]+$/,''); }
-function getExt(n) { return (n.match(/\.[^.]+$/) || [''])[0].toLowerCase(); }
-function esc(s)    { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function fmt(b)    { return b < 1024*1024 ? (b/1024).toFixed(1)+' KB' : (b/1024/1024).toFixed(1)+' MB'; }
-function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-function toast(msg, type='') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className   = 'show' + (type ? ' toast-'+type : '');
-  clearTimeout(t._t);
-  t._t = setTimeout(() => t.className = '', 3200);
+function noExt(n){return n.replace(/\.[^.]+$/,'');}
+function getExt(n){return(n.match(/\.[^.]+$/)||[''])[0].toLowerCase();}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmt(b){return b<1024*1024?(b/1024).toFixed(1)+' KB':(b/1024/1024).toFixed(1)+' MB';}
+function delay(ms){return new Promise(r=>setTimeout(r,ms));}
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='show'+(type?' toast-'+type:'');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.className='',3200);
 }
 </script>
 </body>
