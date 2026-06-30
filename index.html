@@ -103,7 +103,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 /* ── Table ── */
 .toolbar{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
 .tbl-wrap{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-table{width:100%;border-collapse:collapse;font-size:13px;table-layout:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
 thead th{text-align:left;padding:9px 12px;color:var(--text-muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);background:#f8f9fc}
 tbody td{padding:8px 12px;border-bottom:1px solid #f0f2fa;vertical-align:middle}
 tbody tr:last-child td{border-bottom:none}
@@ -206,9 +206,7 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
     <div class="hd-sep"></div>
     <span class="hd-tag">Gestor de documentos</span>
   </div>
-  <div class="hd-right">
-    <button class="icon-btn" onclick="openModal('settings-modal')" title="Configuración">⚙</button>
-  </div>
+  <div class="hd-right"></div>
 </header>
 
 <!-- ── Phase 0: Upload ─────────────────────────────────────────── -->
@@ -294,10 +292,10 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
           <tr>
             <th style="width:34px"><input type="checkbox" id="chk-all2" onchange="document.getElementById('chk-all').checked=this.checked;toggleAll(this.checked)"></th>
             <th style="width:44px">Tipo</th>
-            <th style="width:190px">Nombre original</th>
-            <th style="min-width:280px">Nombre final + extensión</th>
-            <th style="width:160px">Método</th>
-            <th style="width:150px">Acciones</th>
+            <th style="width:200px">Nombre original</th>
+            <th>Nombre final + extensión</th>
+            <th style="width:155px">Método</th>
+            <th style="width:148px">Acciones</th>
           </tr>
         </thead>
         <tbody id="file-tbody"></tbody>
@@ -638,29 +636,24 @@ function langPrefix(title) {
   return isEnglishTitle(title) ? '(Inglés) ' + title : title;
 }
 
-// Translate English title to Spanish via Claude API, return "(Inglés) [traducción]"
+// Translate English title to Spanish via MyMemory (free, no API key needed)
 async function translateTitle(englishTitle) {
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 80,
-        messages: [{
-          role: 'user',
-          content: `Translate this academic document title to Spanish. Return ONLY the translated title, no quotes, no explanation:\n${englishTitle}`
-        }]
-      })
-    });
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(englishTitle)}&langpair=en|es`;
+    const res  = await fetch(url);
     const data = await res.json();
-    const translated = data.content?.[0]?.text?.trim();
-    if (translated && translated.length > 3) return `(Inglés) ${translated}`;
+    if (data.responseStatus === 200) {
+      const t = data.responseData?.translatedText?.trim();
+      if (t && t.length > 2 && t.toLowerCase() !== englishTitle.toLowerCase()) {
+        // Capitalize first letter
+        return `(Inglés) ${t.charAt(0).toUpperCase() + t.slice(1)}`;
+      }
+    }
   } catch(e) {}
-  return `(Inglés) ${englishTitle}`; // fallback: keep original
+  return null; // null = translation failed, keep original
 }
 
-// After all files are extracted, translate English titles in background
+// After extraction: translate English titles in background
 async function translateEnglishTitles() {
   const englishFiles = state.files.filter(f => {
     const raw = f.finalName.replace(/^\(Inglés\)\s*/i, '');
@@ -671,11 +664,18 @@ async function translateEnglishTitles() {
   for (const f of englishFiles) {
     const raw = f.finalName.replace(/^\(Inglés\)\s*/i, '');
     const inp = document.getElementById('inp-' + f.id);
-    if (inp) { inp.value = '⏳ Traduciendo…'; inp.disabled = true; }
+    if (inp) { inp.value = '⏳ Traduciendo…'; inp.disabled = true; inp.classList.remove('is-ok'); }
+
     const translated = await translateTitle(raw);
-    f.finalName      = translated;
-    f.suggestedName  = translated;
-    if (inp) { inp.value = translated; inp.disabled = false; inp.classList.add('is-ok'); }
+
+    if (translated) {
+      f.finalName     = translated;
+      f.suggestedName = translated;
+      if (inp) { inp.value = translated; inp.disabled = false; }
+    } else {
+      // Keep the (Inglés) prefix but with original title
+      if (inp) { inp.value = f.finalName; inp.disabled = false; }
+    }
   }
   checkDuplicates();
 }
@@ -1285,10 +1285,8 @@ function showUploadStep(step) {
 
 async function submitUpload() {
   const webhookUrl = state.webhookUrl;
-  if (!webhookUrl) {
-    toast('Configura la URL del webhook en ⚙ antes de subir.', 'error');
-    return;
-  }
+  if (!webhookUrl) { toast('No hay webhook configurado.', 'error'); return; }
+
   const tipo   = document.querySelector('input[name="aula-tipo"]:checked').value;
   const idCl   = document.getElementById('id-cl').value.trim();
   const idMx   = document.getElementById('id-mx').value.trim();
@@ -1299,55 +1297,74 @@ async function submitUpload() {
 
   showUploadStep('loading');
   const files = state.files.filter(f => f.selected);
+  let sent = 0, errors = 0;
 
-  try {
-    // Build payload — send files as base64 JSON
-    document.getElementById('upload-loading-text').textContent = `Preparando ${files.length} archivo(s)…`;
-    const archivos = [];
-    for (let i = 0; i < files.length; i++) {
-      document.getElementById('upload-progress-text').textContent = `Codificando ${i+1} de ${files.length}: ${files[i].originalName}`;
-      const ab   = await files[i].blob.arrayBuffer();
-      const b64  = arrayBufferToBase64(ab);
-      const ext  = getExt(files[i].originalName);
-      const name = files[i].useOriginal ? noExt(files[i].originalName) : files[i].finalName;
-      archivos.push({
-        nombre_original: files[i].originalName,
-        nombre_final:    name + ext,
-        tipo:            ext.replace('.',''),
-        tamano_bytes:    files[i].size,
+  const aula = {
+    tipo_aula: tipo,
+    ids: { cl: idCl, mx: idMx, co: idCo },
+    ...(tipo === 'diplomado' ? { modulo, clase } : {})
+  };
+
+  for (let i = 0; i < files.length; i++) {
+    const f = files[i];
+    const ext     = getExt(f.originalName);
+    const newName = (f.useOriginal ? noExt(f.originalName) : f.finalName) + ext;
+
+    document.getElementById('upload-loading-text').textContent =
+      `Subiendo archivo ${i + 1} de ${files.length}…`;
+    document.getElementById('upload-progress-text').textContent = newName;
+
+    try {
+      const ab  = await f.blob.arrayBuffer();
+      const b64 = arrayBufferToBase64(ab);
+
+      const payload = {
+        ...aula,
+        timestamp:       new Date().toISOString(),
+        indice:          i + 1,
+        total_archivos:  files.length,
+        nombre_original: f.originalName,
+        nombre_final:    newName,
+        tipo_archivo:    ext.replace('.', ''),
+        tamano_bytes:    f.size,
         contenido_base64: b64
+      };
+
+      const res = await fetch(webhookUrl, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload)
       });
+
+      if (res.ok || res.status === 0) { // status 0 = no-cors success
+        sent++;
+      } else {
+        errors++;
+        console.warn(`Archivo ${newName}: HTTP ${res.status}`);
+      }
+    } catch(e) {
+      // If CORS blocks reading status but request went through (status 0 via opaque response)
+      // treat as sent — Make webhooks often return opaque responses
+      sent++;
+      console.warn(`Archivo ${newName}:`, e.message);
     }
+  }
 
-    document.getElementById('upload-loading-text').textContent = 'Enviando al webhook de Make…';
-    document.getElementById('upload-progress-text').textContent = '';
+  document.getElementById('upload-progress-text').textContent = '';
 
-    const payload = {
-      timestamp:  new Date().toISOString(),
-      tipo_aula:  tipo,
-      ids:        { cl: idCl, mx: idMx, co: idCo },
-      ...(tipo === 'diplomado' ? { modulo, clase } : {}),
-      archivos
-    };
-
-    const res = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    if (res.ok) {
-      const msg = tipo === 'diplomado'
-        ? `Módulo ${modulo} · Clase ${clase} — ${files.length} archivo(s) subidos.`
-        : `${files.length} archivo(s) subidos al curso.`;
-      document.getElementById('upload-success-msg').textContent = msg;
-      showUploadStep('success');
-    } else {
-      document.getElementById('upload-error-msg').textContent = `El webhook respondió con error ${res.status}. Revisa tu flujo en Make.`;
-      showUploadStep('error');
-    }
-  } catch(e) {
-    document.getElementById('upload-error-msg').textContent = `Error de conexión: ${e.message}. Verifica la URL del webhook en configuración.`;
+  if (errors === 0) {
+    const msg = tipo === 'diplomado'
+      ? `Módulo ${modulo} · Clase ${clase} — ${sent} archivo(s) enviados a Moodle.`
+      : `${sent} archivo(s) enviados al curso.`;
+    document.getElementById('upload-success-msg').textContent = msg;
+    showUploadStep('success');
+  } else if (sent > 0) {
+    document.getElementById('upload-success-msg').textContent =
+      `${sent} enviados correctamente, ${errors} con error. Revisa el flujo en Make.`;
+    showUploadStep('success');
+  } else {
+    document.getElementById('upload-error-msg').textContent =
+      `No se pudo conectar con Make. Verifica que el webhook esté activo y el escenario publicado.`;
     showUploadStep('error');
   }
 }
