@@ -382,7 +382,7 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
       <div id="upload-loading" style="display:none" class="upload-result">
         <div class="spinner"></div>
         <h3 style="margin-top:16px">Subiendo a Moodle…</h3>
-        <p id="upload-loading-text">Enviando archivos a través de Make</p>
+        <p id="upload-loading-text">Empaquetando archivos</p>
         <div style="margin-top:12px;font-size:12px;color:var(--text-muted)" id="upload-progress-text"></div>
       </div>
 
@@ -1299,81 +1299,81 @@ async function submitUpload() {
   const files = state.files.filter(f => f.selected);
 
   try {
-    // 1. Build ZIP with all renamed files
+    // ── Step 1: Pack ALL files into one ZIP ───────────────────────
     document.getElementById('upload-loading-text').textContent = `Empaquetando ${files.length} archivo(s)…`;
     const zip  = new JSZip();
     const used = {};
 
     for (let i = 0; i < files.length; i++) {
       document.getElementById('upload-progress-text').textContent =
-        `Agregando ${i + 1} de ${files.length}: ${files[i].originalName}`;
-      const f    = files[i];
-      const ext  = getExt(f.originalName);
-      let base   = san(f.useOriginal ? noExt(f.originalName) : f.finalName) || noExt(f.originalName);
-      let name   = base + ext;
-      const key  = name.toLowerCase();
+        `${i + 1} / ${files.length}: ${files[i].originalName}`;
+      const f   = files[i];
+      const ext = getExt(f.originalName);
+      let base  = san(f.useOriginal ? noExt(f.originalName) : f.finalName) || noExt(f.originalName);
+      let name  = base + ext;
+      const key = name.toLowerCase();
       if (used[key]) { used[key]++; name = base + ` (${used[key]})` + ext; } else used[key] = 1;
       zip.file(name, await f.blob.arrayBuffer());
     }
 
-    // 2. Generate ZIP as base64
+    // ── Step 2: Generate ZIP blob ─────────────────────────────────
     document.getElementById('upload-loading-text').textContent = 'Generando ZIP…';
     document.getElementById('upload-progress-text').textContent = '';
-    const zipBlob   = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 1 } });
-    const zipBuffer = await zipBlob.arrayBuffer();
-    const zipB64    = arrayBufferToBase64(zipBuffer);
 
-    // 3. Send single POST and wait for Make to finish processing
+    const zipBlob = await zip.generateAsync({
+      type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 1 }
+    });
+
+    // ── Step 3: ONE single POST with the ZIP as FormData ──────────
     document.getElementById('upload-loading-text').textContent = 'Enviando a Make…';
-    document.getElementById('upload-progress-text').textContent = 'Aguarda mientras se sube a Moodle…';
+    document.getElementById('upload-progress-text').textContent = 'Esperando confirmación…';
 
-    const payload = {
-      timestamp:      new Date().toISOString(),
-      tipo_aula:      tipo,
-      ids:            { cl: idCl, mx: idMx, co: idCo },
-      ...(tipo === 'diplomado' ? { modulo, clase } : {}),
-      total_archivos: files.length,
-      zip_nombre:     `documentos_${tipo}${tipo === 'diplomado' ? `_m${modulo}_c${clase}` : ''}.zip`,
-      zip_base64:     zipB64
-    };
+    const ids     = [idCl && `CL${idCl}`, idMx && `MX${idMx}`, idCo && `CO${idCo}`].filter(Boolean).join('_');
+    const suffix  = tipo === 'diplomado' ? `_Mod${modulo}_Clase${clase}` : '';
+    const zipName = `Moodle_${ids}${suffix}.zip`;
+
+    // Send as multipart/form-data — Make can receive the ZIP as a file attachment
+    const form = new FormData();
+    form.append('zip', zipBlob, zipName);
+    form.append('tipo_aula',      tipo);
+    form.append('id_cl',          idCl);
+    form.append('id_mx',          idMx);
+    form.append('id_co',          idCo);
+    form.append('modulo',         modulo || '');
+    form.append('clase',          clase  || '');
+    form.append('total_archivos', String(files.length));
+    form.append('zip_nombre',     zipName);
+    form.append('timestamp',      new Date().toISOString());
 
     const res = await fetch(webhookUrl, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(payload),
-      signal:  AbortSignal.timeout(180000) // wait up to 3 min for Make to finish
+      method: 'POST',
+      body:   form        // No Content-Type header — browser sets multipart boundary automatically
     });
 
     document.getElementById('upload-loading-text').textContent = 'Esperando confirmación de Moodle…';
     document.getElementById('upload-progress-text').textContent = '';
 
-    // Try to parse Make's response body for status info
-    let makeResponse = {};
-    try {
-      const text = await res.text();
-      if (text) makeResponse = JSON.parse(text);
-    } catch(e) {}
+    // Parse Make response
+    let makeResp = {};
+    try { const t = await res.text(); if (t) makeResp = JSON.parse(t); } catch(e) {}
 
-    const isError = !res.ok || makeResponse.status === 'error' || makeResponse.error;
-
-    if (!isError) {
+    const failed = !res.ok && res.status !== 0;
+    if (!failed && makeResp.status !== 'error') {
       const defaultMsg = tipo === 'diplomado'
-        ? `Módulo ${modulo} · Clase ${clase} — ${files.length} archivo(s) subidos correctamente.`
-        : `${files.length} archivo(s) subidos al curso correctamente.`;
+        ? `Módulo ${modulo} · Clase ${clase} — ${files.length} archivo(s) subidos.`
+        : `${files.length} archivo(s) subidos al curso.`;
       document.getElementById('upload-success-msg').textContent =
-        makeResponse.message || makeResponse.msg || defaultMsg;
+        makeResp.message || makeResp.msg || defaultMsg;
       showUploadStep('success');
     } else {
       document.getElementById('upload-error-msg').textContent =
-        makeResponse.message || makeResponse.error ||
-        `El webhook respondió con error ${res.status}. Revisa el escenario en Make.`;
+        makeResp.message || `Error ${res.status} — revisa el escenario en Make.`;
       showUploadStep('error');
     }
+
   } catch(e) {
-    const msg = e.name === 'TimeoutError'
-      ? 'La operación tardó más de 3 minutos. Verifica en Moodle si los archivos fueron subidos.'
-      : `Error de conexión: ${e.message}. Verifica que el escenario esté activo en Make.`;
-    document.getElementById('upload-error-msg').textContent = msg;
+    document.getElementById('upload-error-msg').textContent =
+      `Error: ${e.message}`;
     showUploadStep('error');
   }
 }
