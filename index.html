@@ -475,7 +475,7 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
 // ── State ─────────────────────────────────────────────────────────
 const state = {
   files: [],        // { id, originalName, suggestedName, finalName, useOriginal, selected, method, blob, size, blobUrl }
-  webhookUrl: localStorage.getItem('adipa_webhook') || 'https://hook.us2.make.com/0yh6xb8uzoau95tepbosi07h2mrcru2j'
+  webhookUrl: 'https://hook.us2.make.com/0yh6xb8uzoau95tepbosi07h2mrcru2j'
 };
 
 // ── Init ──────────────────────────────────────────────────────────
@@ -1438,8 +1438,7 @@ function arrayBufferToBase64(buffer) {
 // ── Settings ──────────────────────────────────────────────────────
 function saveSettings() {
   const url = document.getElementById('webhook-url').value.trim();
-  state.webhookUrl = url;
-  localStorage.setItem('adipa_webhook', url);
+  if (url) state.webhookUrl = url;
   closeModal('settings-modal');
   toast('Configuración guardada ✓', 'ok');
 }
