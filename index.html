@@ -58,7 +58,7 @@ header{background:var(--navy);padding:0 1.5rem;height:60px;display:flex;align-it
 .size-note{font-size:12px;color:var(--text-muted);text-align:center}
 
 /* ── Progress ── */
-#phase-processing{display:none;max-width:960px;margin:2rem auto;padding:0 1.25rem}
+#phase-processing{display:none;max-width:1400px;margin:2rem auto;padding:0 1.5rem}
 .prog-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:1.75rem}
 .prog-top{display:flex;justify-content:space-between;font-size:13px;color:var(--text-mid);margin-bottom:10px}
 .prog-pct{font-weight:700;color:var(--purple);font-size:15px}
@@ -171,11 +171,12 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--purple);cursor:po
 /* ── New UI elements ── */
 .ext-suffix{font-size:12px;font-family:'SF Mono','Fira Code',monospace;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);padding:4px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0}
 .name-input.is-dup{border-color:var(--amber)!important;background:var(--amber-lt)!important}
-.dup-warn{font-size:11px;color:var(--amber);margin-top:3px;font-weight:500}
-.alt-panel{background:var(--bg);border:1px solid var(--border-dk);border-radius:9px;padding:6px;margin-top:6px;display:none}
-.alt-option{padding:7px 10px;border-radius:7px;cursor:pointer;font-size:12px;color:var(--text-mid);display:flex;align-items:center;gap:8px;transition:background .1s;line-height:1.4}
-.alt-option:hover{background:var(--white);color:var(--navy)}
-.alt-option .alt-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.review-main{max-width:100%;margin:0;padding:1rem 1.5rem 3rem}
+.dup-warn{font-size:10px;color:var(--amber);font-weight:600;white-space:nowrap;margin-left:4px;flex-shrink:0}
+.alt-panel{background:var(--white);border:1px solid var(--border-dk);border-radius:9px;padding:6px;margin-top:6px;display:none;min-width:380px;max-width:600px;box-shadow:0 4px 16px rgba(9,30,66,.12);position:relative;z-index:10}
+.alt-option{padding:8px 10px;border-radius:7px;cursor:pointer;font-size:12px;color:var(--text-mid);display:flex;align-items:flex-start;gap:8px;transition:background .1s;line-height:1.5}
+.alt-option:hover{background:var(--bg);color:var(--navy)}
+.alt-option .alt-title{flex:1;white-space:normal;word-break:break-word}
 .btn-regen{background:var(--lavender)!important;color:var(--purple)!important;border-color:transparent!important;font-size:11px!important;padding:4px 8px!important}
 .btn-regen:hover{background:#e0d5ff!important}
 .btn-orig{font-size:11px!important;padding:4px 8px!important;color:var(--text-mid)}
@@ -284,7 +285,6 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
     <div class="toolbar">
       <input type="checkbox" id="chk-all" title="Seleccionar todos" onchange="toggleAll(this.checked)">
       <label for="chk-all" style="font-size:13px;color:var(--text-mid);cursor:pointer;margin-right:6px">Seleccionar todos</label>
-      <button class="btn-sm btn-primary" onclick="applySelected(true)" style="padding:6px 14px;font-size:13px">✓ Aplicar nombre sugerido</button>
       <button class="btn-sm" onclick="applySelected(false)">↩ Mantener nombre original</button>
     </div>
 
@@ -293,11 +293,11 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
         <thead>
           <tr>
             <th style="width:34px"><input type="checkbox" id="chk-all2" onchange="document.getElementById('chk-all').checked=this.checked;toggleAll(this.checked)"></th>
-            <th style="width:50px">Tipo</th>
-            <th style="width:26%">Nombre original</th>
+            <th style="width:46px">Tipo</th>
+            <th style="width:22%">Nombre original</th>
             <th>Nombre final + extensión</th>
-            <th style="width:155px">Método de detección</th>
-            <th style="width:165px">Acciones</th>
+            <th style="width:170px">Método de detección</th>
+            <th style="width:170px">Acciones</th>
           </tr>
         </thead>
         <tbody id="file-tbody"></tbody>
@@ -420,7 +420,7 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
     <div class="modal-body">
       <div class="form-group">
         <div class="form-label">URL del Webhook de Make</div>
-        <input class="form-input" type="url" id="webhook-url" placeholder="https://hook.us1.make.com/xxxxxxxxxxxx">
+        <input class="form-input" type="url" id="webhook-url" placeholder="https://hook.us2.make.com/...">
         <div class="hint">El webhook de Make que recibe los archivos y los sube a Moodle.</div>
       </div>
       <div style="background:var(--blue-lt);border-radius:9px;padding:12px 14px;font-size:12px;color:#1e3a8a;line-height:1.6">
@@ -451,7 +451,7 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
 // ── State ─────────────────────────────────────────────────────────
 const state = {
   files: [],        // { id, originalName, suggestedName, finalName, useOriginal, selected, method, blob, size, blobUrl }
-  webhookUrl: localStorage.getItem('adipa_webhook') || ''
+  webhookUrl: localStorage.getItem('adipa_webhook') || 'https://hook.us2.make.com/0yh6xb8uzoau95tepbosi07h2mrcru2j'
 };
 
 // ── Init ──────────────────────────────────────────────────────────
@@ -510,7 +510,7 @@ async function handleFiles(fileList) {
     const info = ext === '.pdf' ? await extractPdf(f.blob, f.name) : await extractDocx(f.blob, f.name);
     state.files.push({
       id: i, originalName: f.name,
-      suggestedName: info.title, finalName: info.title,
+      suggestedName: langPrefix(info.title), finalName: langPrefix(info.title),
       useOriginal: false, selected: true,
       method: info.method, source: info.source || '',
       blob: f.blob, size: f.size, blobUrl: null
@@ -616,6 +616,27 @@ function truncateTitle(title) {
 }
 
 // Fix capitalization
+// Detect English titles and prefix with "(Inglés) "
+const EN_MARKERS = new Set(['the','of','and','in','for','to','with','an','is','are','that','this','on','at','by','from','its','their','be','has','have','was','were','not','but','or','it','as','into','about','between','through','within','among','across','during','against','art','therapy','based','approach','using','role','toward','beyond','effects','review']);
+const ES_MARKERS = new Set(['de','la','el','en','con','por','para','que','y','del','los','las','una','un','se','es','lo','su','al','le','nos','hay','como','pero','más','si','también','sobre','entre','hacia','durante','contra','según','sin','una','arte','terapia','arteterapia','creatividad','psicología','educación']);
+
+function isEnglishTitle(text) {
+  if (!text) return false;
+  if (text.startsWith('(Inglés)')) return false; // already tagged
+  const words = text.toLowerCase().match(/\b[a-z]{2,}\b/g) || [];
+  if (words.length < 2) return false;
+  let en = 0, es = 0;
+  for (const w of words) {
+    if (EN_MARKERS.has(w)) en++;
+    if (ES_MARKERS.has(w)) es++;
+  }
+  return en >= 2 && es === 0;
+}
+
+function langPrefix(title) {
+  return isEnglishTitle(title) ? '(Inglés) ' + title : title;
+}
+
 function fixCase(text) {
   if (!text) return text;
   const letters = text.replace(/[^a-zA-ZáéíóúàèìòùäëïöüñÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÑ]/g, '');
@@ -879,12 +900,13 @@ function inputCell(f, i) {
   const val     = esc(f.useOriginal ? noExt(f.originalName) : f.finalName);
   const errCls  = f.method === 'error' && !f.useOriginal ? 'is-error' : '';
   return `
-    <div style="display:flex;align-items:center;gap:6px">
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap">
       <input class="name-input ${errCls}" id="inp-${i}" type="text"
         value="${val}" ${f.useOriginal ? 'disabled' : ''}
         placeholder="Escribe el nombre aquí…"
-        oninput="onNameChange(${i},this.value)">
+        oninput="onNameChange(${i},this.value)" style="min-width:0;flex:1">
       <span class="ext-suffix">${esc(ext)}</span>
+      <span class="dup-warn" id="dup-${i}" style="display:none">⚠ Duplicado</span>
     </div>
     <div class="alt-panel" id="alt-panel-${i}"></div>
   `;
@@ -959,21 +981,20 @@ function checkDuplicates() {
     if (!names[name]) names[name] = [];
     names[name].push(i);
   });
-  // Clear old warnings
-  document.querySelectorAll('.dup-warn').forEach(el => el.remove());
-  document.querySelectorAll('.name-input.is-dup').forEach(el => el.classList.remove('is-dup'));
+  // Reset all
+  state.files.forEach((f, i) => {
+    const inp  = document.getElementById('inp-' + i);
+    const warn = document.getElementById('dup-' + i);
+    if (inp)  inp.classList.remove('is-dup');
+    if (warn) warn.style.display = 'none';
+  });
   // Mark duplicates
   Object.values(names).filter(arr => arr.length > 1).forEach(arr => {
     arr.forEach(i => {
-      const inp = document.getElementById('inp-' + i);
-      if (!inp) return;
-      inp.classList.add('is-dup');
-      if (!inp.parentNode.querySelector('.dup-warn')) {
-        const w = document.createElement('div');
-        w.className = 'dup-warn';
-        w.textContent = '⚠ Nombre duplicado — edita para diferenciar';
-        inp.parentNode.appendChild(w);
-      }
+      const inp  = document.getElementById('inp-' + i);
+      const warn = document.getElementById('dup-' + i);
+      if (inp)  inp.classList.add('is-dup');
+      if (warn) warn.style.display = 'inline';
     });
   });
 }
@@ -1018,7 +1039,7 @@ async function getAlternatives(blob, filename) {
   const add = (title, method, source) => {
     const t = (title || '').trim();
     if (!t || t.length < 4 || isGarbage(t) || hasEncodingIssue(t)) return;
-    candidates.push({ title: t, method, source: source || '' });
+    candidates.push({ title: langPrefix(t), method, source: source || '' });
   };
 
   if (ext === '.pdf' && window.pdfjsLib) {
