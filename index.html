@@ -148,10 +148,14 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--purple);cursor:po
 .form-input{width:100%;padding:8px 12px;border-radius:8px;border:1.5px solid var(--border);font-size:13px;font-family:inherit;color:var(--navy);background:var(--bg);transition:border .12s}
 .form-input:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(112,78,253,.1);background:#fff}
 .form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.radio-group{display:flex;gap:10px}
-.radio-opt{flex:1;border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500}
-.radio-opt:has(input:checked){border-color:var(--purple);background:var(--purple-lt)}
-.radio-opt input{accent-color:var(--purple)}
+.formato-opt{display:flex;align-items:flex-start;gap:12px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .12s;background:var(--white)}
+.formato-opt:hover{border-color:var(--purple);background:var(--purple-lt)}
+.formato-opt.selected{border-color:var(--purple);background:var(--purple-lt)}
+.fmt-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.fmt-info{flex:1}
+.fmt-title{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:3px}
+.fmt-desc{font-size:12px;color:var(--text-muted);line-height:1.5}
+.fmt-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--border-dk);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--purple)}
 .hint{font-size:11px;color:var(--text-muted);margin-top:4px}
 .upload-result{text-align:center;padding:1.5rem 0}
 .upload-result .icon{font-size:48px;margin-bottom:12px}
@@ -331,43 +335,65 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
 
       <!-- Step 1: form -->
       <div id="upload-form">
+        <!-- Tipo de formato -->
         <div class="form-group">
-          <div class="form-label">Tipo de aula</div>
-          <div class="radio-group">
-            <label class="radio-opt"><input type="radio" name="aula-tipo" value="curso" checked onchange="onTipoChange()"> 📘 Curso</label>
-            <label class="radio-opt"><input type="radio" name="aula-tipo" value="diplomado" onchange="onTipoChange()"> 🎓 Diplomado</label>
+          <div class="form-label">Formato del aula en Moodle</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+
+            <label class="formato-opt" id="fmt-apoyo" onclick="selectFormato('apoyo')">
+              <input type="radio" name="fmt" value="apoyo" checked style="display:none">
+              <div class="fmt-icon">📁</div>
+              <div class="fmt-info">
+                <div class="fmt-title">Recursos de apoyo</div>
+                <div class="fmt-desc">Carpeta dentro del módulo de recursos. Archivos sueltos para todo el programa. Ej: cursos breves de 3 clases.</div>
+              </div>
+              <div class="fmt-check" id="check-apoyo">✓</div>
+            </label>
+
+            <label class="formato-opt" id="fmt-asinc" onclick="selectFormato('asinc')">
+              <input type="radio" name="fmt" value="asinc" style="display:none">
+              <div class="fmt-icon">📂</div>
+              <div class="fmt-info">
+                <div class="fmt-title">Módulo asíncrono</div>
+                <div class="fmt-desc">Módulo específico con su propia carpeta. Archivos sueltos dentro. Ej: Módulo 1, Módulo 2…</div>
+              </div>
+              <div class="fmt-check" id="check-asinc"></div>
+            </label>
+
+            <label class="formato-opt fmt-disabled" id="fmt-diplo" style="cursor:not-allowed;opacity:.5">
+              <input type="radio" name="fmt" value="diplo" disabled style="display:none">
+              <div class="fmt-icon">🎓</div>
+              <div class="fmt-info">
+                <div class="fmt-title">Diplomado / Postitulo</div>
+                <div class="fmt-desc">Módulo con subcarpetas internas. No disponible aún — Make aún no soporta subir a subcarpetas.</div>
+              </div>
+              <div style="font-size:11px;font-weight:600;color:var(--red);white-space:nowrap">No disponible</div>
+            </label>
+
           </div>
         </div>
 
+        <!-- Número de módulo (solo asíncrono) -->
+        <div id="modulo-field" style="display:none" class="form-group">
+          <div class="form-label">Número de módulo</div>
+          <input class="form-input" type="number" id="num-modulo" placeholder="Ej: 2" min="1" style="max-width:160px">
+        </div>
+
+        <!-- IDs Moodle -->
         <div class="form-group">
           <div class="form-label">IDs del curso en Moodle</div>
           <div class="form-row">
             <div>
-              <input class="form-input" type="text" id="id-cl" placeholder="ID Chile (CL)">
-              <div class="hint">Chile</div>
+              <input class="form-input" type="text" id="id-cl" placeholder="ID Chile">
+              <div class="hint">Chile (CL)</div>
             </div>
             <div>
-              <input class="form-input" type="text" id="id-mx" placeholder="ID México (MX)">
-              <div class="hint">México</div>
+              <input class="form-input" type="text" id="id-mx" placeholder="ID México">
+              <div class="hint">México (MX)</div>
             </div>
             <div>
-              <input class="form-input" type="text" id="id-co" placeholder="ID Colombia (CO)">
-              <div class="hint">Colombia</div>
-            </div>
-          </div>
-        </div>
-
-        <div id="diplomado-fields" style="display:none">
-          <div class="form-group">
-            <div class="form-row" style="grid-template-columns:1fr 1fr">
-              <div>
-                <div class="form-label">Número de módulo</div>
-                <input class="form-input" type="number" id="num-modulo" placeholder="Ej: 2" min="1">
-              </div>
-              <div>
-                <div class="form-label">Número de clase</div>
-                <input class="form-input" type="number" id="num-clase" placeholder="Ej: 5" min="1">
-              </div>
+              <input class="form-input" type="text" id="id-co" placeholder="ID Colombia">
+              <div class="hint">Colombia (CO)</div>
             </div>
           </div>
         </div>
@@ -1263,9 +1289,17 @@ function openUploadModal() {
   openModal('upload-modal');
 }
 
-function onTipoChange() {
-  const tipo = document.querySelector('input[name="aula-tipo"]:checked').value;
-  document.getElementById('diplomado-fields').style.display = tipo === 'diplomado' ? 'block' : 'none';
+function selectFormato(fmt) {
+  ['apoyo','asinc'].forEach(f => {
+    const el   = document.getElementById('fmt-' + f);
+    const chk  = document.getElementById('check-' + f);
+    const inp  = el?.querySelector('input');
+    const sel  = f === fmt;
+    if (el)  el.classList.toggle('selected', sel);
+    if (chk) chk.textContent = sel ? '✓' : '';
+    if (inp) inp.checked = sel;
+  });
+  document.getElementById('modulo-field').style.display = fmt === 'asinc' ? 'block' : 'none';
 }
 
 function showUploadStep(step) {
@@ -1287,13 +1321,13 @@ async function submitUpload() {
   const webhookUrl = state.webhookUrl;
   if (!webhookUrl) { toast('No hay webhook configurado.', 'error'); return; }
 
-  const tipo   = document.querySelector('input[name="aula-tipo"]:checked').value;
+  const fmt    = document.querySelector('input[name="fmt"]:checked')?.value || 'apoyo';
+  const modulo = fmt === 'asinc' ? (document.getElementById('num-modulo').value.trim() || '') : '';
   const idCl   = document.getElementById('id-cl').value.trim();
   const idMx   = document.getElementById('id-mx').value.trim();
   const idCo   = document.getElementById('id-co').value.trim();
-  const modulo = document.getElementById('num-modulo').value.trim();
-  const clase  = document.getElementById('num-clase').value.trim();
   if (!idCl && !idMx && !idCo) { toast('Ingresa al menos un ID de Moodle.', 'error'); return; }
+  if (fmt === 'asinc' && !modulo) { toast('Ingresa el número de módulo.', 'error'); return; }
 
   showUploadStep('loading');
   const files = state.files.filter(f => f.selected);
@@ -1331,12 +1365,11 @@ async function submitUpload() {
 
     const payload = {
       timestamp:      new Date().toISOString(),
-      tipo_aula:      tipo,
+      formato:        fmt,        // 'apoyo' | 'asinc'
       id_cl:          idCl,
       id_mx:          idMx,
       id_co:          idCo,
-      modulo:         modulo || '',
-      clase:          clase  || '',
+      modulo:         modulo,
       total_archivos: files.length,
       archivos
     };
@@ -1356,9 +1389,8 @@ async function submitUpload() {
 
     const failed = !res.ok && res.status !== 0;
     if (!failed && makeResp.status !== 'error') {
-      const defaultMsg = tipo === 'diplomado'
-        ? `Módulo ${modulo} · Clase ${clase} — ${files.length} archivo(s) subidos.`
-        : `${files.length} archivo(s) subidos al curso.`;
+      const fmtLabel  = fmt === 'asinc' ? `Módulo ${modulo}` : 'Recursos de apoyo';
+      const defaultMsg = `${fmtLabel} — ${files.length} archivo(s) subidos correctamente.`;
       document.getElementById('upload-success-msg').textContent =
         makeResp.message || makeResp.msg || defaultMsg;
       showUploadStep('success');
