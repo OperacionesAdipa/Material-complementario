@@ -549,41 +549,125 @@ function fixCase(text) {
 }
 
 // ── PDF extraction ────────────────────────────────────────────────
+
+// Group text items by Y coordinate (same line = within 2pt tolerance)
+function groupByLine(items) {
+  const sorted = [...items].sort((a, b) => {
+    const yA = a.transform ? a.transform[5] : 0;
+    const yB = b.transform ? b.transform[5] : 0;
+    return yB - yA; // top of page first
+  });
+  const lines = [];
+  for (const item of sorted) {
+    const y = item.transform ? item.transform[5] : 0;
+    const line = lines.find(l => Math.abs(l.y - y) < 2.5);
+    if (line) line.items.push(item);
+    else lines.push({ y, items: [item] });
+  }
+  // Sort items within each line left→right
+  for (const l of lines) l.items.sort((a,b) => (a.transform?.[4]||0) - (b.transform?.[4]||0));
+  return lines.map(l => l.items);
+}
+
+// True if the text is a decorative separator (dashes, underscores, dots, etc.)
+function isDecorative(text) {
+  return /^[\-_=•·*~\s\u2014\u2013\u2015\u2501\u2500\u007C\/\\]+$/.test(text);
+}
+
+// True if the text is a chapter/section label with no real title content
+function isChapterLabel(text) {
+  return /^(cap[ií]tulo|chapter|parte|part|secci[oó]n|section|unidad|unit|tema)\s*[\d\w]*\.?$/i.test(text.trim())
+      || /^\d{1,3}$/.test(text.trim()); // pure short number
+}
+
 async function extractPdf(blob, filename) {
   if (!window.pdfjsLib) return { title: noExt(filename), method: 'error' };
   try {
     const buf = await blob.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
 
-    // 1. PDF metadata Title — only if non-garbage
+    // 1. Metadata Title — only if not garbage
     try {
       const meta = await pdf.getMetadata();
       const t    = meta?.info?.Title?.trim();
       if (t && !isGarbage(t)) return { title: fixCase(san(t)), method: 'metadata', source: `Metadatos del archivo (campo Title): "${t.substring(0,60)}"` };
     } catch(e) {}
 
-    // 2. Largest font on page 1 — collect spans at same size, validate
-    const page    = await pdf.getPage(1);
-    const content = await page.getTextContent();
-    const items   = content.items.filter(i => i.str && i.str.trim().length > 0);
-
-    if (items.length) {
-      const maxH = Math.max(...items.map(i => i.height || 0));
-      if (maxH > 0) {
-        // Collect consecutive spans at max height — they form the title line
-        const top    = items.filter(i => Math.abs((i.height || 0) - maxH) < 0.5);
-        const joined = top.map(i => i.str).join(' ').replace(/\s+/g,' ').trim();
-        if (!isGarbage(joined)) return { title: fixCase(san(joined)), method: 'font', source: `Texto con mayor tamaño de fuente en pág. 1 (${Math.round(maxH)}pt): "${joined.substring(0,60)}"` };
-      }
-
-      // 3. Scan first lines until a non-garbage one is found
-      for (const item of items.slice(0, 12)) {
-        const t = item.str.trim();
-        if (t.length > 4 && !isGarbage(t)) return { title: fixCase(san(t)), method: 'firstline', source: `Primera línea válida encontrada en pág. 1: "${t.substring(0,60)}"` };
-      }
+    // 2. Scan up to first 4 pages — skip credits/index pages, find real title page
+    const maxPages = Math.min(pdf.numPages, 4);
+    for (let p = 1; p <= maxPages; p++) {
+      const result = await extractTitleFromPage(pdf, p, maxPages);
+      if (result) return result;
     }
   } catch(e) {}
   return { title: noExt(filename), method: 'error' };
+}
+
+async function extractTitleFromPage(pdf, pageNum, maxPages) {
+  try {
+    const page    = await pdf.getPage(pageNum);
+    const content = await page.getTextContent();
+
+    // Remove empty and purely decorative items
+    const items = content.items.filter(i => {
+      const t = (i.str || '').trim();
+      return t.length > 0 && !isDecorative(t);
+    });
+    if (!items.length) return null;
+
+    // Detect non-title pages and skip them (unless it's the last page we're trying)
+    const sample = items.slice(0, 20).map(i => i.str).join(' ');
+    const isCredits = /p[áa]gina\s+de\s+cr[eé]ditos|cr[eé]ditos\s+de\s+la\s+obra|isbn[\s:]/i.test(sample);
+    const isIndex   = /tabla\s+de\s+contenido|[íi]ndice\s+general|table\s+of\s+contents/i.test(sample);
+    if ((isCredits || isIndex) && pageNum < maxPages) return null;
+
+    // Collect items that have measurable font height
+    const withH = items.filter(i => (i.height || 0) > 0);
+
+    if (withH.length > 0) {
+      // Get unique heights sorted descending
+      const heights = [...new Set(withH.map(i => Math.round(i.height * 10) / 10))].sort((a,b) => b-a);
+
+      for (const h of heights.slice(0, 6)) {
+        const atH = withH.filter(i => Math.abs(i.height - h) < 0.6);
+
+        // Skip if all these items together are a chapter label or number
+        const combined = atH.map(i => i.str.trim()).join(' ').trim();
+        if (isChapterLabel(combined)) continue;
+        if (combined.length < 5) continue;
+
+        // Group into visual lines — take only the FIRST valid line
+        // (avoids merging bilingual title + subtitle at same font size)
+        const lines = groupByLine(atH);
+        for (const lineItems of lines) {
+          const lineText = lineItems.map(i => i.str).join(' ').replace(/\s+/g,' ').trim();
+          if (isDecorative(lineText)) continue;
+          if (isChapterLabel(lineText)) continue;
+          if (lineText.length < 5 || isGarbage(lineText)) continue;
+          return {
+            title:  fixCase(san(lineText)),
+            method: 'font',
+            source: `Texto con mayor tamaño (${Math.round(h)}pt) en pág. ${pageNum}, primera línea: "${lineText.substring(0,60)}"`
+          };
+        }
+      }
+    }
+
+    // Fallback: first non-decorative, non-garbage text item on this page
+    if (pageNum === 1 || !isCredits) {
+      for (const item of items.slice(0, 20)) {
+        const t = item.str.trim();
+        if (t.length > 4 && !isDecorative(t) && !isChapterLabel(t) && !isGarbage(t)) {
+          return {
+            title:  fixCase(san(t)),
+            method: 'firstline',
+            source: `Primera línea válida en pág. ${pageNum}: "${t.substring(0,60)}"`
+          };
+        }
+      }
+    }
+  } catch(e) {}
+  return null;
 }
 
 // ── DOCX extraction ───────────────────────────────────────────────
