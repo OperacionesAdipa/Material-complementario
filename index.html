@@ -258,7 +258,7 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
 
   <div class="review-main">
     <div class="legend">
-      <span class="leg-lbl">Método:</span>
+      <span class="leg-lbl">Método de detección — pasa el cursor sobre el badge para ver de dónde se extrajo el título:</span>
       <span class="badge b-metadata">✓ Metadatos</span>
       <span class="badge b-font">✓ Mayor fuente</span>
       <span class="badge b-firstline">✓ Primera línea</span>
@@ -269,9 +269,9 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
 
     <div class="toolbar">
       <input type="checkbox" id="chk-all" title="Seleccionar todos" onchange="toggleAll(this.checked)">
-      <label for="chk-all" style="font-size:13px;color:var(--text-mid);cursor:pointer">Seleccionar todos</label>
-      <button class="btn-sm" onclick="applySelected(true)">✓ Aplicar nombre sugerido</button>
-      <button class="btn-sm" onclick="applySelected(false)">← Mantener original</button>
+      <label for="chk-all" style="font-size:13px;color:var(--text-mid);cursor:pointer;margin-right:6px">Seleccionar todos</label>
+      <button class="btn-sm btn-primary" onclick="applySelected(true)" style="padding:6px 14px;font-size:13px">✓ Aplicar nombre sugerido</button>
+      <button class="btn-sm" onclick="applySelected(false)">↩ Mantener nombre original</button>
     </div>
 
     <div class="tbl-wrap">
@@ -469,7 +469,9 @@ async function handleFiles(fileList) {
           if (entry.dir) continue;
           const pl = path.toLowerCase();
           if (!pl.endsWith('.pdf') && !pl.endsWith('.docx')) continue;
-          const blob = await entry.async('blob');
+          const raw  = await entry.async('arraybuffer');
+          const mime = pl.endsWith('.pdf') ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+          const blob = new Blob([raw], { type: mime });
           totalSize += blob.size;
           collected.push({ name: path.split('/').pop(), blob, size: blob.size });
         }
@@ -496,8 +498,8 @@ async function handleFiles(fileList) {
       id: i, originalName: f.name,
       suggestedName: info.title, finalName: info.title,
       useOriginal: false, selected: true,
-      method: info.method, blob: f.blob, size: f.size,
-      blobUrl: null
+      method: info.method, source: info.source || '',
+      blob: f.blob, size: f.size, blobUrl: null
     });
   }
   setProgress(collected.length, collected.length, '');
@@ -506,30 +508,79 @@ async function handleFiles(fileList) {
   setPhase('review');
 }
 
+// ── Title quality filters ─────────────────────────────────────────
+// Patterns that indicate garbage metadata (software names, file refs, codes)
+const GARBAGE_RE = [
+  /\.(docx?|indd|vp|xlsx?|pptx?|ai|eps|qxd|pub|pages|odt|rtf|wps|idml|psd|cdr)(\s|$)/i,
+  /^microsoft\s+(word|excel|powerpoint|office)/i,
+  /^(adobe|indesign|quark|corel)/i,
+  /^[a-zA-Z]{1,3}\d{3,}$/,                      // RP8283, AB1234
+  /^\d{3,}$/,                                     // pure numbers
+  /^(untitled|sin\s*título|document|nuevo\s+documento|undefined|null)$/i,
+];
+
+// Generic words that alone are useless as filenames
+const GENERIC_RE = /^(capítulo|capitulo|chapter|introducción|introduction|resumen|abstract|anexo|apéndice|prefacio|prólogo|índice|indice|contenido|tabla|figura|parte|sección|seccion|tema|unidad)\.?\s*\d*$/i;
+
+function isGarbage(text) {
+  if (!text) return true;
+  const t = text.trim();
+  if (t.length < 4) return true;
+  if (GARBAGE_RE.some(r => r.test(t))) return true;
+  if (GENERIC_RE.test(t)) return true;
+  // Reject if it looks like a filename (has extension-like suffix with mixed chars)
+  if (/[a-zA-Z0-9]{4,}\.[a-z]{2,5}$/.test(t) && !t.includes(' ')) return true;
+  return false;
+}
+
+// Fix capitalization: if text is ≥70% uppercase letters → convert to sentence case
+function fixCase(text) {
+  if (!text) return text;
+  const letters = text.replace(/[^a-zA-ZáéíóúàèìòùäëïöüñÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÑ]/g, '');
+  if (letters.length < 3) return text;
+  const uppers = (letters.match(/[A-ZÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÑ]/g) || []).length;
+  if (uppers / letters.length >= 0.65) {
+    // Convert to sentence case: first letter upper, rest lower
+    const low = text.toLowerCase();
+    return low.charAt(0).toUpperCase() + low.slice(1);
+  }
+  // Already mixed case — just ensure first letter is uppercase
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
 // ── PDF extraction ────────────────────────────────────────────────
 async function extractPdf(blob, filename) {
   if (!window.pdfjsLib) return { title: noExt(filename), method: 'error' };
   try {
     const buf = await blob.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+
+    // 1. PDF metadata Title — only if non-garbage
     try {
       const meta = await pdf.getMetadata();
       const t    = meta?.info?.Title?.trim();
-      if (t && t.length > 2 && !/^(untitled|sin título|document|undefined)$/i.test(t))
-        return { title: san(t), method: 'metadata' };
+      if (t && !isGarbage(t)) return { title: fixCase(san(t)), method: 'metadata', source: `Metadatos del archivo (campo Title): "${t.substring(0,60)}"` };
     } catch(e) {}
+
+    // 2. Largest font on page 1 — collect spans at same size, validate
     const page    = await pdf.getPage(1);
     const content = await page.getTextContent();
     const items   = content.items.filter(i => i.str && i.str.trim().length > 0);
+
     if (items.length) {
       const maxH = Math.max(...items.map(i => i.height || 0));
       if (maxH > 0) {
+        // Collect consecutive spans at max height — they form the title line
         const top    = items.filter(i => Math.abs((i.height || 0) - maxH) < 0.5);
-        const joined = top.map(i => i.str).join(' ').trim();
-        if (joined.length > 2) return { title: san(joined), method: 'font' };
+        const joined = top.map(i => i.str).join(' ').replace(/\s+/g,' ').trim();
+        if (!isGarbage(joined)) return { title: fixCase(san(joined)), method: 'font', source: `Texto con mayor tamaño de fuente en pág. 1 (${Math.round(maxH)}pt): "${joined.substring(0,60)}"` };
       }
-      const first = items.find(i => i.str.trim().length > 2);
-      if (first) return { title: san(first.str.trim()), method: 'firstline' };
+
+      // 3. Scan first lines until a non-garbage one is found
+      for (const item of items.slice(0, 12)) {
+        const t = item.str.trim();
+        if (t.length > 4 && !isGarbage(t)) return { title: fixCase(san(t)), method: 'firstline', source: `Primera línea válida encontrada en pág. 1: "${t.substring(0,60)}"` };
+      }
     }
   } catch(e) {}
   return { title: noExt(filename), method: 'error' };
@@ -539,27 +590,39 @@ async function extractPdf(blob, filename) {
 async function extractDocx(blob, filename) {
   try {
     const buf = await blob.arrayBuffer();
+
+    // 1. core.xml → dc:title (only if non-garbage)
     try {
       const dz   = await JSZip.loadAsync(buf.slice(0));
       const core = dz.file('docProps/core.xml');
       if (core) {
         const xml = await core.async('text');
         const m   = xml.match(/<dc:title[^>]*>([^<]+)<\/dc:title>/i);
-        if (m && m[1].trim().length > 2) return { title: san(m[1].trim()), method: 'metadata' };
+        if (m) {
+          const t = m[1].trim();
+          if (!isGarbage(t)) return { title: fixCase(san(t)), method: 'metadata', source: `Metadatos del archivo Word (docProps/core.xml → dc:title): "${t.substring(0,60)}"` };
+        }
       }
     } catch(e) {}
+
+    // 2. mammoth → heading hierarchy
     const buf2   = await blob.arrayBuffer();
     const result = await mammoth.convertToHtml({ arrayBuffer: buf2 });
     const div    = document.createElement('div');
     div.innerHTML = result.value;
+
     for (const sel of ['h1','h2','h3']) {
       const el = div.querySelector(sel);
-      if (el && el.textContent.trim().length > 2)
-        return { title: san(el.textContent.trim()), method: 'docx' };
+      if (el) {
+        const t = el.textContent.trim();
+        if (!isGarbage(t)) return { title: fixCase(san(t)), method: 'docx', source: `Encabezado ${sel.toUpperCase()} del documento Word: "${t.substring(0,60)}"` };
+      }
     }
+
+    // 3. First non-garbage paragraph
     for (const el of div.querySelectorAll('p')) {
       const t = el.textContent.trim();
-      if (t.length > 2) return { title: san(t), method: 'firstline' };
+      if (t.length > 4 && !isGarbage(t)) return { title: fixCase(san(t)), method: 'firstline', source: `Primer párrafo válido del documento: "${t.substring(0,60)}"` };
     }
   } catch(e) {}
   return { title: noExt(filename), method: 'error' };
@@ -572,11 +635,11 @@ function renderReview() {
   tbody.innerHTML = '';
 
   const METHOD = {
-    metadata:  { cls:'b-metadata',  lbl:'✓ Metadatos'       },
-    font:      { cls:'b-font',      lbl:'✓ Mayor fuente'     },
-    firstline: { cls:'b-firstline', lbl:'✓ Primera línea'    },
-    docx:      { cls:'b-docx',      lbl:'✓ Encabezado DOCX'  },
-    error:     { cls:'b-error',     lbl:'⚠ Sin título'       },
+    metadata:  { cls:'b-metadata',  lbl:'Metadatos',       desc:'Título extraído de los metadatos internos del archivo (campo Title)' },
+    font:      { cls:'b-font',      lbl:'Mayor fuente',     desc:'Texto con el mayor tamaño de fuente encontrado en la página 1 del PDF' },
+    firstline: { cls:'b-firstline', lbl:'Primera línea',   desc:'Primera línea de texto válida encontrada en el documento' },
+    docx:      { cls:'b-docx',      lbl:'Encabezado Word', desc:'Título tomado del encabezado H1/H2/H3 del documento Word' },
+    error:     { cls:'b-error',     lbl:'Sin título',      desc:'No se encontró un título válido — edita el nombre manualmente' },
   };
 
   state.files.forEach((f, i) => {
@@ -604,8 +667,11 @@ function renderReview() {
       </td>
       <td>
         ${f.useOriginal
-          ? `<span class="badge b-kept">— Original</span>`
-          : `<span class="badge ${meta.cls}">${meta.lbl}</span>`}
+          ? `<span class="badge b-kept">— Nombre original</span>`
+          : `<span class="badge ${meta.cls}" title="${esc(f.source || meta.desc)}" style="cursor:help">
+               ${f.method === 'error' ? '⚠' : '✓'} ${meta.lbl}
+               <span style="opacity:.6;font-size:10px;margin-left:3px">ⓘ</span>
+             </span>`}
       </td>
       <td>
         <div class="row-actions">
@@ -653,11 +719,11 @@ function renderRow(i) {
   const f   = state.files[i];
   const ext = getExt(f.originalName).replace('.','');
   const METHOD = {
-    metadata:'<span class="badge b-metadata">✓ Metadatos</span>',
-    font:'<span class="badge b-font">✓ Mayor fuente</span>',
-    firstline:'<span class="badge b-firstline">✓ Primera línea</span>',
-    docx:'<span class="badge b-docx">✓ Encabezado DOCX</span>',
-    error:'<span class="badge b-error">⚠ Sin título</span>',
+    metadata:`<span class="badge b-metadata" title="${esc(state.files[i].source || 'Metadatos internos del archivo')}" style="cursor:help">✓ Metadatos <span style="opacity:.6;font-size:10px">ⓘ</span></span>`,
+    font:`<span class="badge b-font" title="${esc(state.files[i].source || 'Texto de mayor tamaño en pág. 1')}" style="cursor:help">✓ Mayor fuente <span style="opacity:.6;font-size:10px">ⓘ</span></span>`,
+    firstline:`<span class="badge b-firstline" title="${esc(state.files[i].source || 'Primera línea válida del documento')}" style="cursor:help">✓ Primera línea <span style="opacity:.6;font-size:10px">ⓘ</span></span>`,
+    docx:`<span class="badge b-docx" title="${esc(state.files[i].source || 'Encabezado H1/H2/H3 del Word')}" style="cursor:help">✓ Encabezado Word <span style="opacity:.6;font-size:10px">ⓘ</span></span>`,
+    error:`<span class="badge b-error" title="No se encontró título válido — edita el nombre manualmente" style="cursor:help">⚠ Sin título <span style="opacity:.6;font-size:10px">ⓘ</span></span>`,
   };
   tr.className = f.useOriginal ? 'row-kept' : (f.method === 'error' ? 'row-error' : '');
   const cells = tr.querySelectorAll('td');
@@ -705,13 +771,26 @@ async function openPreview(i) {
   const body = document.getElementById('preview-body');
   document.getElementById('preview-title').textContent = f.finalName || f.originalName;
   document.getElementById('preview-fname').textContent = f.originalName;
-  body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted)">Cargando vista previa…</div>';
+  body.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted)">Cargando vista previa…</div>';
   openModal('preview-modal');
 
-  if (!f.blobUrl) f.blobUrl = URL.createObjectURL(f.blob);
-
   if (ext === '.pdf') {
-    body.innerHTML = `<iframe src="${f.blobUrl}" class="preview-frame" title="Vista previa PDF"></iframe>`;
+    try {
+      // Ensure correct MIME type for inline rendering
+      const ab       = await f.blob.arrayBuffer();
+      const pdfBlob  = new Blob([ab], { type: 'application/pdf' });
+      const url      = URL.createObjectURL(pdfBlob);
+      if (!f.blobUrl) f.blobUrl = url;
+      body.innerHTML = `
+        <embed src="${url}#toolbar=1&navpanes=0" type="application/pdf"
+          style="width:100%;height:72vh;border:none;border-radius:8px;background:#f8f8f8"
+          title="Vista previa PDF">
+        <p style="margin-top:8px;font-size:12px;color:var(--text-muted);text-align:center">
+          Si el PDF no se muestra, <a href="${url}" target="_blank" style="color:var(--purple)">ábrelo en una pestaña nueva</a>.
+        </p>`;
+    } catch(e) {
+      body.innerHTML = '<div style="padding:2rem;color:var(--red)">No se pudo cargar el PDF.</div>';
+    }
   } else {
     try {
       const buf    = await f.blob.arrayBuffer();
