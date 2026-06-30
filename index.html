@@ -103,7 +103,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 /* ── Table ── */
 .toolbar{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
 .tbl-wrap{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+table{width:100%;border-collapse:collapse;font-size:13px;table-layout:auto}
 thead th{text-align:left;padding:9px 12px;color:var(--text-muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);background:#f8f9fc}
 tbody td{padding:8px 12px;border-bottom:1px solid #f0f2fa;vertical-align:middle}
 tbody tr:last-child td{border-bottom:none}
@@ -293,11 +293,11 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
         <thead>
           <tr>
             <th style="width:34px"><input type="checkbox" id="chk-all2" onchange="document.getElementById('chk-all').checked=this.checked;toggleAll(this.checked)"></th>
-            <th style="width:46px">Tipo</th>
-            <th style="width:22%">Nombre original</th>
-            <th>Nombre final + extensión</th>
-            <th style="width:170px">Método de detección</th>
-            <th style="width:170px">Acciones</th>
+            <th style="width:44px">Tipo</th>
+            <th style="width:190px">Nombre original</th>
+            <th style="min-width:280px">Nombre final + extensión</th>
+            <th style="width:160px">Método</th>
+            <th style="width:150px">Acciones</th>
           </tr>
         </thead>
         <tbody id="file-tbody"></tbody>
@@ -520,6 +520,7 @@ async function handleFiles(fileList) {
   await delay(300);
   renderReview();
   setPhase('review');
+  translateEnglishTitles(); // background translation, non-blocking
 }
 
 // ── Title quality filters ──────────────────────────────────────────
@@ -635,6 +636,48 @@ function isEnglishTitle(text) {
 
 function langPrefix(title) {
   return isEnglishTitle(title) ? '(Inglés) ' + title : title;
+}
+
+// Translate English title to Spanish via Claude API, return "(Inglés) [traducción]"
+async function translateTitle(englishTitle) {
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 80,
+        messages: [{
+          role: 'user',
+          content: `Translate this academic document title to Spanish. Return ONLY the translated title, no quotes, no explanation:\n${englishTitle}`
+        }]
+      })
+    });
+    const data = await res.json();
+    const translated = data.content?.[0]?.text?.trim();
+    if (translated && translated.length > 3) return `(Inglés) ${translated}`;
+  } catch(e) {}
+  return `(Inglés) ${englishTitle}`; // fallback: keep original
+}
+
+// After all files are extracted, translate English titles in background
+async function translateEnglishTitles() {
+  const englishFiles = state.files.filter(f => {
+    const raw = f.finalName.replace(/^\(Inglés\)\s*/i, '');
+    return isEnglishTitle(raw);
+  });
+  if (!englishFiles.length) return;
+
+  for (const f of englishFiles) {
+    const raw = f.finalName.replace(/^\(Inglés\)\s*/i, '');
+    const inp = document.getElementById('inp-' + f.id);
+    if (inp) { inp.value = '⏳ Traduciendo…'; inp.disabled = true; }
+    const translated = await translateTitle(raw);
+    f.finalName      = translated;
+    f.suggestedName  = translated;
+    if (inp) { inp.value = translated; inp.disabled = false; inp.classList.add('is-ok'); }
+  }
+  checkDuplicates();
 }
 
 function fixCase(text) {
