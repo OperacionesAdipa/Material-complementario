@@ -167,6 +167,21 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--purple);cursor:po
 #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s;pointer-events:none;z-index:999;border-left:4px solid var(--blue);max-width:320px}
 #toast.show{opacity:1;transform:translateY(0)}
 #toast.toast-error{border-left-color:var(--red)}
+
+/* ── New UI elements ── */
+.ext-suffix{font-size:12px;font-family:'SF Mono','Fira Code',monospace;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);padding:4px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0}
+.name-input.is-dup{border-color:var(--amber)!important;background:var(--amber-lt)!important}
+.dup-warn{font-size:11px;color:var(--amber);margin-top:3px;font-weight:500}
+.alt-panel{background:var(--bg);border:1px solid var(--border-dk);border-radius:9px;padding:6px;margin-top:6px;display:none}
+.alt-option{padding:7px 10px;border-radius:7px;cursor:pointer;font-size:12px;color:var(--text-mid);display:flex;align-items:center;gap:8px;transition:background .1s;line-height:1.4}
+.alt-option:hover{background:var(--white);color:var(--navy)}
+.alt-option .alt-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-regen{background:var(--lavender)!important;color:var(--purple)!important;border-color:transparent!important;font-size:11px!important;padding:4px 8px!important}
+.btn-regen:hover{background:#e0d5ff!important}
+.btn-orig{font-size:11px!important;padding:4px 8px!important;color:var(--text-mid)}
+.row-actions{display:flex;gap:3px;flex-wrap:nowrap}
+.method-detail{font-size:10px;color:var(--text-muted);margin-top:2px;line-height:1.3}
+
 #toast.toast-ok{border-left-color:var(--green)}
 
 footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);border-top:1px solid var(--border);background:var(--white);margin-top:3rem}
@@ -258,13 +273,12 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
 
   <div class="review-main">
     <div class="legend">
-      <span class="leg-lbl">Método de detección — pasa el cursor sobre el badge para ver de dónde se extrajo el título:</span>
-      <span class="badge b-metadata">✓ Metadatos</span>
-      <span class="badge b-font">✓ Mayor fuente</span>
-      <span class="badge b-firstline">✓ Primera línea</span>
-      <span class="badge b-docx">✓ Encabezado DOCX</span>
-      <span class="badge b-error">⚠ Sin título</span>
-      <span class="badge b-kept">— Nombre original</span>
+      <span class="leg-lbl">Pasa el cursor sobre el método para ver de dónde se extrajo el título:</span>
+      <span class="badge b-metadata">✓ Propiedades del archivo</span>
+      <span class="badge b-font">✓ Texto más grande</span>
+      <span class="badge b-firstline">✓ Primera línea legible</span>
+      <span class="badge b-docx">✓ Encabezado Word H1/H2</span>
+      <span class="badge b-error">⚠ Sin título detectado</span>
     </div>
 
     <div class="toolbar">
@@ -280,10 +294,10 @@ footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--text-muted);b
           <tr>
             <th style="width:34px"><input type="checkbox" id="chk-all2" onchange="document.getElementById('chk-all').checked=this.checked;toggleAll(this.checked)"></th>
             <th style="width:50px">Tipo</th>
-            <th style="width:28%">Nombre original</th>
-            <th>Nombre final</th>
-            <th style="width:130px">Método</th>
-            <th style="width:100px">Acciones</th>
+            <th style="width:26%">Nombre original</th>
+            <th>Nombre final + extensión</th>
+            <th style="width:155px">Método de detección</th>
+            <th style="width:165px">Acciones</th>
           </tr>
         </thead>
         <tbody id="file-tbody"></tbody>
@@ -514,14 +528,17 @@ const GARBAGE_RE = [
   /\.(docx?|indd|vp|xlsx?|pptx?|ai|eps|qxd|pub|pages|odt|rtf|wps|idml|psd|cdr)(\s|$)/i,
   /^microsoft\s+(word|excel|powerpoint|office)/i,
   /^(adobe|indesign|quark|corel)/i,
-  /^[a-zA-Z]{1,4}\d{2,}(\/\d+)?$/,          // RP8283, RP82/83, AB12
+  /^[a-zA-Z]{1,4}\d{2,}(\/\d+)?$/,           // RP8283, RP82/83
   /^\d{3,}$/,
   /^(untitled|sin\s*título|document|nuevo\s+documento|undefined|null)$/i,
-  /^[Rr]ticles$/,                             // "Articles" logo truncated
-  /^(articles?|reviews?|editorial|features?)$/i, // journal section labels
+  /^[Rr]ticles$/,                              // "Articles" logo truncated
+  /^(articles?|reviews?|editorial|features?)$/i,
+  /^(https?:\/\/)?doi[\s.:\/]*10\.\d{4}/i,    // DOI URLs: doi:10.xxx, Doi10., Httpsdoi.org
+  /^Httpsdoi/i,
+  /^https?:\/\/doi\.org/i,
 ];
 
-const GENERIC_RE = /^(capítulo|capitulo|chapter|introducción|introduction|resumen|abstract|anexo|apéndice|prefacio|prólogo|índice|indice|contenido|tabla|figura|parte|sección|seccion|tema|unidad)\.?\s*\d*$/i;
+const GENERIC_RE = /^(capítulo|capitulo|chapter|introducción|introduction|resumen|abstract|anexo|apéndice|prefacio|prólogo|índice|indice|contenido|tabla|figura|parte|sección|seccion|tema|unidad|original\s+article|research\s+article|review\s+article|case\s+study|case\s+report|brief\s+report)\.?\s*\d*$/i;
 
 function isGarbage(text) {
   if (!text) return true;
@@ -533,12 +550,22 @@ function isGarbage(text) {
   return false;
 }
 
-// Detect broken glyph encoding: "El c E r E bro" pattern
+// Detect broken glyph encoding: "El c E r E bro" — raised threshold to fix false positives (fix F)
 function hasEncodingIssue(text) {
-  if (!text || text.length < 8) return false;
+  if (!text || text.length < 10) return false;
   const tokens = text.trim().split(/\s+/);
+  if (tokens.length < 5) return false;
   const singles = tokens.filter(t => t.length === 1 && /[A-Za-z]/.test(t));
-  return singles.length / tokens.length > 0.38;
+  return singles.length / tokens.length > 0.48;
+}
+
+// Detect corrupted Latin-1 accents: "artstico" instead of "artístico" (fix D)
+function hasCorruptedAccents(text) {
+  if (!text || text.length < 12) return false;
+  if (/[áéíóúñü]/i.test(text)) return false;
+  const hasSpanish = /\b(de|la|el|en|con|por|para|que|y|del|los|las|una?)\b/i.test(text);
+  const hasMissing = /\b\w*(cion|stico|afio|gico|fico|mico|tico|nimo|bito|grafia)\b/i.test(text);
+  return hasSpanish && hasMissing;
 }
 
 // Fix spaced special chars from bad PDF encoding: "acompa ñ amiento" → "acompañamiento"
@@ -550,18 +577,24 @@ function fixCharEncoding(text) {
     .replace(/\s{2,}/g, ' ').trim();
 }
 
-// Clean metadata title: remove repository prefixes, bilingual suffixes, author appendages
+// Clean metadata title: remove repo prefixes, bilingual suffixes, author appendages, DOI, footnotes
 function cleanMeta(text) {
   if (!text) return text;
   let t = text.trim();
-  // Strip known repository prefixes
+  // Strip DOI/URL prefixes (fix E, G)
+  if (/^(https?:\/\/)?doi[\s.:\/]*10\.\d{4}/i.test(t) || /^Httpsdoi/i.test(t)) return '';
+  // Strip known repository prefixes (fix 8)
   t = t.replace(/^(Redalyc\.|Dialnet[\-\s]+|ResearchGate\.|Academia\.|Scielo\.|JSTOR\.)/i, '').trim();
-  // Remove bilingual part after " = "
+  // Remove bilingual part after " = " (fix 10)
   const eq = t.indexOf(' = ');
   if (eq > 10) t = t.substring(0, eq).trim();
+  // Remove footnote references like [1], [2] (fix A sub)
+  t = t.replace(/\[\d+\]/g, '').trim();
+  // Remove chapter/section number prefix "7. Title" (fix B)
+  t = t.replace(/^\d+\.\s+/, '').trim();
   // Remove trailing noise: asterisk, dagger, slash-number
   t = t.replace(/[\*†‡§¶\s\/\d]+$/, '').trim();
-  // Detect "Title. Firstname Lastname" and strip author
+  // Detect "Title. Firstname Lastname" and strip author (fix 4)
   if (/\.\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+([\s\-][A-ZÁÉÍÓÚÑ][a-záéíóúñ]+){1,3}$/.test(t)) {
     const dot = t.lastIndexOf('. ');
     if (dot > 5) t = t.substring(0, dot).trim();
@@ -645,7 +678,7 @@ async function extractPdf(blob, filename) {
       const raw  = meta?.info?.Title?.trim();
       if (raw) {
         const t = cleanMeta(raw);
-        if (t && !isGarbage(t) && !hasEncodingIssue(t)) {
+        if (t && !isGarbage(t) && !hasEncodingIssue(t) && !hasCorruptedAccents(t)) {
           return { title: truncateTitle(fixCase(san(t))), method: 'metadata',
             source: `Metadatos del archivo (campo Title): "${t.substring(0,60)}"` };
         }
@@ -725,7 +758,11 @@ async function extractTitleFromPage(pdf, pageNum, maxPages) {
         }
 
         if (!titleLines.length) continue;
-        const raw = fixCharEncoding(titleLines.join(' '));
+        const raw = fixCharEncoding(titleLines.join(' '))
+          .replace(/\[\d+\]/g, '')       // remove footnote refs [1] (fix A sub)
+          .replace(/^\d+\.\s+/, '')      // remove chapter prefix "7. " (fix B)
+          .replace(/[\*†‡]+$/, '')       // trailing asterisks
+          .trim();
         if (isGarbage(raw)) continue;
         const final = truncateTitle(fixCase(san(raw)));
 
@@ -794,27 +831,88 @@ async function extractDocx(blob, filename) {
   return { title: noExt(filename), method: 'error' };
 }
 
+// ── Method display definitions ─────────────────────────────────────
+const METHOD_DISPLAY = {
+  metadata:  {
+    cls:'b-metadata', icon:'✓',
+    lbl:'Propiedades del archivo',
+    detail:'Campo "Title" en las propiedades internas del documento (visible en Archivo → Propiedades)'
+  },
+  font:      {
+    cls:'b-font', icon:'✓',
+    lbl:'Texto más grande',
+    detail:'Texto con el mayor tamaño de fuente encontrado en la página de portada'
+  },
+  firstline: {
+    cls:'b-firstline', icon:'✓',
+    lbl:'Primera línea legible',
+    detail:'Primera línea de texto válida — usada cuando no hay indicador claro de título'
+  },
+  docx:      {
+    cls:'b-docx', icon:'✓',
+    lbl:'Encabezado Word (H1/H2)',
+    detail:'Primer párrafo con estilo Encabezado 1 o 2 del documento Word'
+  },
+  filename:  {
+    cls:'b-kept', icon:'✓',
+    lbl:'Nombre del archivo',
+    detail:'No se encontró título en el contenido — se usó el nombre del archivo limpio'
+  },
+  error:     {
+    cls:'b-error', icon:'⚠',
+    lbl:'Sin título detectado',
+    detail:'No se encontró ningún indicador de título válido — edita el nombre manualmente'
+  },
+};
+
+function methodBadge(f) {
+  if (f.useOriginal) return `<span class="badge b-kept">— Nombre original mantenido</span>`;
+  const m = METHOD_DISPLAY[f.method] || METHOD_DISPLAY.error;
+  const tip = esc((f.source ? f.source + '\n\n' : '') + m.detail);
+  return `<span class="badge ${m.cls}" title="${tip}" style="cursor:help;white-space:normal;line-height:1.4">
+    ${m.icon} ${m.lbl} <span style="opacity:.55;font-size:10px">ⓘ</span>
+  </span>`;
+}
+
+function inputCell(f, i) {
+  const ext     = getExt(f.originalName);
+  const val     = esc(f.useOriginal ? noExt(f.originalName) : f.finalName);
+  const errCls  = f.method === 'error' && !f.useOriginal ? 'is-error' : '';
+  return `
+    <div style="display:flex;align-items:center;gap:6px">
+      <input class="name-input ${errCls}" id="inp-${i}" type="text"
+        value="${val}" ${f.useOriginal ? 'disabled' : ''}
+        placeholder="Escribe el nombre aquí…"
+        oninput="onNameChange(${i},this.value)">
+      <span class="ext-suffix">${esc(ext)}</span>
+    </div>
+    <div class="alt-panel" id="alt-panel-${i}"></div>
+  `;
+}
+
+function actionButtons(f, i) {
+  const origLabel = f.useOriginal ? '✏ Sugerido' : '↩ Original';
+  return `
+    <div class="row-actions">
+      <button class="btn-sm btn-icon" onclick="openPreview(${i})" title="Vista previa del documento">👁</button>
+      <button class="btn-sm btn-regen" onclick="showAlternatives(${i})" title="Ver opciones de título alternativas">🔄 Opciones</button>
+      <button class="btn-sm btn-orig" onclick="toggleOriginal(${i})" id="orig-btn-${i}" title="${f.useOriginal ? 'Volver al nombre sugerido' : 'Mantener el nombre original del archivo'}">${origLabel}</button>
+    </div>
+  `;
+}
+
 // ── Render review table ───────────────────────────────────────────
 function renderReview() {
   updateStats();
   const tbody = document.getElementById('file-tbody');
   tbody.innerHTML = '';
 
-  const METHOD = {
-    metadata:  { cls:'b-metadata',  lbl:'Metadatos',       desc:'Título extraído de los metadatos internos del archivo (campo Title)' },
-    font:      { cls:'b-font',      lbl:'Mayor fuente',     desc:'Texto con el mayor tamaño de fuente encontrado en la página 1 del PDF' },
-    firstline: { cls:'b-firstline', lbl:'Primera línea',   desc:'Primera línea de texto válida encontrada en el documento' },
-    docx:      { cls:'b-docx',      lbl:'Encabezado Word', desc:'Título tomado del encabezado H1/H2/H3 del documento Word' },
-    error:     { cls:'b-error',     lbl:'Sin título',      desc:'No se encontró un título válido — edita el nombre manualmente' },
-  };
-
   state.files.forEach((f, i) => {
     const ext  = getExt(f.originalName).replace('.','');
-    const meta = METHOD[f.method] || METHOD.error;
-    const isErr = f.method === 'error';
+    const isErr = f.method === 'error' && !f.useOriginal;
     const tr   = document.createElement('tr');
     tr.id = 'row-' + i;
-    if (isErr && !f.useOriginal) tr.classList.add('row-error');
+    if (isErr) tr.classList.add('row-error');
     if (f.useOriginal) tr.classList.add('row-kept');
 
     tr.innerHTML = `
@@ -822,48 +920,188 @@ function renderReview() {
       <td><span class="ext-badge ext-${ext}">${ext}</span></td>
       <td><span class="fname" title="${esc(f.originalName)}">${esc(f.originalName)}</span>
           <span style="font-size:10px;color:var(--text-muted)">${fmt(f.size)}</span></td>
-      <td>
-        <input class="name-input ${isErr && !f.useOriginal ? 'is-error' : ''} ${f.useOriginal ? '' : ''}"
-          id="inp-${i}" type="text"
-          value="${esc(f.useOriginal ? f.originalName : f.finalName)}"
-          ${f.useOriginal ? 'disabled' : ''}
-          placeholder="Escribe el nombre aquí…"
-          oninput="onNameChange(${i},this.value)">
-        ${f.useOriginal ? `<span style="font-size:11px;color:var(--text-muted);margin-left:4px">nombre original</span>` : ''}
-      </td>
-      <td>
-        ${f.useOriginal
-          ? `<span class="badge b-kept">— Nombre original</span>`
-          : `<span class="badge ${meta.cls}" title="${esc(f.source || meta.desc)}" style="cursor:help">
-               ${f.method === 'error' ? '⚠' : '✓'} ${meta.lbl}
-               <span style="opacity:.6;font-size:10px;margin-left:3px">ⓘ</span>
-             </span>`}
-      </td>
-      <td>
-        <div class="row-actions">
-          <button class="btn-sm btn-icon" onclick="openPreview(${i})" title="Vista previa">👁</button>
-          <button class="btn-sm btn-icon" onclick="toggleOriginal(${i})" title="${f.useOriginal ? 'Usar nombre sugerido' : 'Mantener original'}" id="orig-btn-${i}">
-            ${f.useOriginal ? '✏' : '↩'}
-          </button>
-        </div>
-      </td>
+      <td>${inputCell(f, i)}</td>
+      <td>${methodBadge(f)}</td>
+      <td>${actionButtons(f, i)}</td>
     `;
     tbody.appendChild(tr);
   });
+  checkDuplicates();
+}
+
+function renderRow(i) {
+  const tr = document.getElementById('row-' + i);
+  if (!tr) return;
+  const f = state.files[i];
+  const ext = getExt(f.originalName).replace('.','');
+  tr.className = f.useOriginal ? 'row-kept' : (f.method === 'error' ? 'row-error' : '');
+  const cells = tr.querySelectorAll('td');
+  cells[3].innerHTML = inputCell(f, i);
+  cells[4].innerHTML = methodBadge(f);
+  cells[5].innerHTML = actionButtons(f, i);
+  checkDuplicates();
 }
 
 function onNameChange(i, val) {
   state.files[i].finalName = val;
+  state.files[i].useOriginal = false;
   const inp = document.getElementById('inp-' + i);
-  inp.classList.remove('is-error');
-  inp.classList.add('is-ok');
+  if (inp) { inp.classList.remove('is-error','is-dup'); inp.classList.add('is-ok'); }
+  checkDuplicates();
   updateStats();
 }
 
-function toggleRow(i, checked) {
-  state.files[i].selected = checked;
-  updateStats();
+function checkDuplicates() {
+  const names = {};
+  state.files.forEach((f, i) => {
+    const name = (f.useOriginal ? noExt(f.originalName) : f.finalName || '').toLowerCase().trim();
+    if (!name) return;
+    if (!names[name]) names[name] = [];
+    names[name].push(i);
+  });
+  // Clear old warnings
+  document.querySelectorAll('.dup-warn').forEach(el => el.remove());
+  document.querySelectorAll('.name-input.is-dup').forEach(el => el.classList.remove('is-dup'));
+  // Mark duplicates
+  Object.values(names).filter(arr => arr.length > 1).forEach(arr => {
+    arr.forEach(i => {
+      const inp = document.getElementById('inp-' + i);
+      if (!inp) return;
+      inp.classList.add('is-dup');
+      if (!inp.parentNode.querySelector('.dup-warn')) {
+        const w = document.createElement('div');
+        w.className = 'dup-warn';
+        w.textContent = '⚠ Nombre duplicado — edita para diferenciar';
+        inp.parentNode.appendChild(w);
+      }
+    });
+  });
 }
+
+// ── Alternatives (Regenerate) ─────────────────────────────────────
+async function showAlternatives(i) {
+  const panel = document.getElementById('alt-panel-' + i);
+  if (!panel) return;
+  if (panel.style.display === 'block') { panel.style.display = 'none'; return; }
+  panel.innerHTML = '<div style="padding:8px;font-size:12px;color:var(--text-muted)">Buscando opciones…</div>';
+  panel.style.display = 'block';
+  const f    = state.files[i];
+  const alts = await getAlternatives(f.blob, f.originalName);
+  if (!alts.length) {
+    panel.innerHTML = '<div style="padding:8px;font-size:12px;color:var(--text-muted)">No se encontraron opciones adicionales.</div>';
+    return;
+  }
+  panel.innerHTML = alts.map(alt => {
+    const m = METHOD_DISPLAY[alt.method] || METHOD_DISPLAY.filename;
+    return `<div class="alt-option" onclick="selectAlternative(${i},'${esc(alt.title).replace(/'/g,"&#39;")}')" title="${esc(alt.source||'')}">
+      <span class="badge ${m.cls}" style="flex-shrink:0;font-size:10px">${m.lbl}</span>
+      <span class="alt-title">${esc(alt.title)}</span>
+    </div>`;
+  }).join('');
+}
+
+function selectAlternative(i, title) {
+  state.files[i].finalName   = title;
+  state.files[i].useOriginal = false;
+  const inp = document.getElementById('inp-' + i);
+  if (inp) { inp.value = title; inp.disabled = false; inp.classList.remove('is-error','is-dup'); inp.classList.add('is-ok'); }
+  const panel = document.getElementById('alt-panel-' + i);
+  if (panel) panel.style.display = 'none';
+  const cells = document.getElementById('row-' + i)?.querySelectorAll('td');
+  if (cells) cells[5].innerHTML = actionButtons(state.files[i], i);
+  checkDuplicates();
+}
+
+async function getAlternatives(blob, filename) {
+  const candidates = [];
+  const ext = getExt(filename);
+  const add = (title, method, source) => {
+    const t = (title || '').trim();
+    if (!t || t.length < 4 || isGarbage(t) || hasEncodingIssue(t)) return;
+    candidates.push({ title: t, method, source: source || '' });
+  };
+
+  if (ext === '.pdf' && window.pdfjsLib) {
+    try {
+      const buf = await blob.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+      // Metadata
+      try {
+        const meta = await pdf.getMetadata();
+        const raw  = meta?.info?.Title?.trim();
+        if (raw) { const t = cleanMeta(raw); if (t) add(truncateTitle(fixCase(san(t))), 'metadata', `Metadatos: "${raw.substring(0,55)}"`); }
+      } catch(e) {}
+      // Font + firstline per page
+      for (let p = 1; p <= Math.min(pdf.numPages, 3); p++) {
+        try {
+          const page    = await pdf.getPage(p);
+          const content = await page.getTextContent();
+          const items   = content.items.filter(i => (i.str||'').trim() && !isDecorative((i.str||'').trim()));
+          const withH   = items.filter(i => (i.height||0) > 0);
+          if (withH.length) {
+            const heights = [...new Set(withH.map(i => Math.round(i.height*10)/10))].sort((a,b)=>b-a);
+            for (const h of heights.slice(0,4)) {
+              const atH  = withH.filter(i => Math.abs(i.height-h) < 0.6);
+              const comb = atH.map(i=>i.str.trim()).join(' ').trim();
+              if (isChapterLabel(comb) || comb.length < 5) continue;
+              const allC = atH.every(i => { const t=i.str.trim(); return !t||t===t.toUpperCase(); });
+              const lines = groupByLine(atH);
+              let acc = [];
+              for (let li = 0; li < Math.min(lines.length,4); li++) {
+                const lt = lines[li].map(i=>i.str).join(' ').replace(/\s+/g,' ').trim();
+                if (!lt||isDecorative(lt)||isChapterLabel(lt)) { if(li===0)continue; else break; }
+                if (li===0) { if(lt.length<4||isGarbage(lt)||hasEncodingIssue(lt)) break; acc.push(lt); }
+                else if (shouldJoin(acc.join(' '),lt,allC)) acc.push(lt); else break;
+              }
+              if (acc.length) {
+                const raw2 = fixCharEncoding(acc.join(' '));
+                if (!isGarbage(raw2)) add(truncateTitle(fixCase(san(raw2))), 'font', `Fuente ${Math.round(h)}pt pág.${p}: "${raw2.substring(0,50)}"`);
+              }
+            }
+          }
+          for (const item of items.slice(0,15)) {
+            const t = fixCharEncoding(item.str.trim());
+            if (t.length>4 && !isDecorative(t) && !isChapterLabel(t) && !isGarbage(t) && !hasEncodingIssue(t)) {
+              add(truncateTitle(fixCase(san(t))), 'firstline', `Primera línea pág.${p}: "${t.substring(0,50)}"`);
+              break;
+            }
+          }
+        } catch(e) {}
+      }
+    } catch(e) {}
+  } else if (ext === '.docx') {
+    try {
+      const buf  = await blob.arrayBuffer();
+      const buf2 = await blob.arrayBuffer();
+      try {
+        const dz = await JSZip.loadAsync(buf.slice(0));
+        const core = dz.file('docProps/core.xml');
+        if (core) { const xml=await core.async('text'); const m=xml.match(/<dc:title[^>]*>([^<]+)<\/dc:title>/i); if(m){const t=cleanMeta(m[1].trim());if(t)add(fixCase(san(t)),'metadata',`Metadatos Word: "${m[1].substring(0,50)}"`);}  }
+      } catch(e) {}
+      const result = await mammoth.convertToHtml({ arrayBuffer: buf2 });
+      const div2   = document.createElement('div');
+      div2.innerHTML = result.value;
+      for (const sel of ['h1','h2','h3','p']) {
+        const el = div2.querySelector(sel);
+        if (el) { const t=el.textContent.trim(); if(t.length>4&&!isGarbage(t)) add(fixCase(san(t)), sel.startsWith('h')?'docx':'firstline', `Elemento ${sel.toUpperCase()}: "${t.substring(0,50)}"`); }
+      }
+    } catch(e) {}
+  }
+
+  // Always add cleaned filename
+  const fn = fixCase(san(noExt(filename).replace(/[-_.]+/g,' ').replace(/\s+/g,' ').trim()));
+  if (fn && fn.length > 3 && !isGarbage(fn)) add(fn, 'filename', `Nombre del archivo: "${filename}"`);
+
+  // Deduplicate
+  const seen = new Set();
+  return candidates.filter(c => {
+    const k = c.title.toLowerCase().replace(/[^a-z0-9áéíóú]/g,'');
+    if (seen.has(k)) return false;
+    seen.add(k); return true;
+  });
+}
+
+function toggleRow(i, checked) { state.files[i].selected = checked; updateStats(); }
 
 function toggleAll(checked) {
   state.files.forEach(f => f.selected = checked);
@@ -879,53 +1117,16 @@ function toggleOriginal(i) {
   updateStats();
 }
 
-function renderRow(i) {
-  const tr = document.getElementById('row-' + i);
-  if (!tr) return;
-  const f   = state.files[i];
-  const ext = getExt(f.originalName).replace('.','');
-  const METHOD = {
-    metadata:`<span class="badge b-metadata" title="${esc(state.files[i].source || 'Metadatos internos del archivo')}" style="cursor:help">✓ Metadatos <span style="opacity:.6;font-size:10px">ⓘ</span></span>`,
-    font:`<span class="badge b-font" title="${esc(state.files[i].source || 'Texto de mayor tamaño en pág. 1')}" style="cursor:help">✓ Mayor fuente <span style="opacity:.6;font-size:10px">ⓘ</span></span>`,
-    firstline:`<span class="badge b-firstline" title="${esc(state.files[i].source || 'Primera línea válida del documento')}" style="cursor:help">✓ Primera línea <span style="opacity:.6;font-size:10px">ⓘ</span></span>`,
-    docx:`<span class="badge b-docx" title="${esc(state.files[i].source || 'Encabezado H1/H2/H3 del Word')}" style="cursor:help">✓ Encabezado Word <span style="opacity:.6;font-size:10px">ⓘ</span></span>`,
-    error:`<span class="badge b-error" title="No se encontró título válido — edita el nombre manualmente" style="cursor:help">⚠ Sin título <span style="opacity:.6;font-size:10px">ⓘ</span></span>`,
-  };
-  tr.className = f.useOriginal ? 'row-kept' : (f.method === 'error' ? 'row-error' : '');
-  const cells = tr.querySelectorAll('td');
-
-  // input cell
-  cells[3].innerHTML = `
-    <input class="name-input ${f.method === 'error' && !f.useOriginal ? 'is-error' : ''}"
-      id="inp-${i}" type="text"
-      value="${esc(f.useOriginal ? f.originalName : f.finalName)}"
-      ${f.useOriginal ? 'disabled' : ''}
-      placeholder="Escribe el nombre aquí…"
-      oninput="onNameChange(${i},this.value)">
-    ${f.useOriginal ? '<span style="font-size:11px;color:var(--text-muted);margin-left:4px">nombre original</span>' : ''}
-  `;
-  // badge cell
-  cells[4].innerHTML = f.useOriginal ? '<span class="badge b-kept">— Original</span>' : (METHOD[f.method] || METHOD.error);
-  // btn
-  const origBtn = cells[5].querySelector('[id^=orig-btn-]');
-  if (origBtn) { origBtn.title = f.useOriginal ? 'Usar nombre sugerido' : 'Mantener original'; origBtn.textContent = f.useOriginal ? '✏' : '↩'; }
-}
-
 function applySelected(useSuggested) {
-  state.files.forEach((f, i) => {
-    if (!f.selected) return;
-    f.useOriginal = !useSuggested;
-    renderRow(i);
-  });
+  state.files.forEach((f, i) => { if (!f.selected) return; f.useOriginal = !useSuggested; renderRow(i); });
   updateStats();
 }
 
 function updateStats() {
   const sel = state.files.filter(f => f.selected).length;
   const err = state.files.filter(f => f.method === 'error' && !f.useOriginal).length;
-  const ok  = state.files.length - err;
   document.getElementById('rb-total').textContent = state.files.length;
-  document.getElementById('rb-ok').textContent    = ok;
+  document.getElementById('rb-ok').textContent    = state.files.length - err;
   document.getElementById('rb-err').textContent   = err;
   document.getElementById('rb-sel').textContent   = sel;
 }
