@@ -1324,7 +1324,12 @@ async function submitUpload() {
       type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 1 }
     });
 
-    // ── Step 3: ONE single POST with the ZIP as FormData ──────────
+    // ── Step 3: ONE single POST with ZIP as base64 JSON ──────────
+    document.getElementById('upload-loading-text').textContent = 'Codificando ZIP…';
+
+    const zipBuffer = await zipBlob.arrayBuffer();
+    const zipB64    = arrayBufferToBase64(zipBuffer);
+
     document.getElementById('upload-loading-text').textContent = 'Enviando a Make…';
     document.getElementById('upload-progress-text').textContent = 'Esperando confirmación…';
 
@@ -1332,22 +1337,23 @@ async function submitUpload() {
     const suffix  = tipo === 'diplomado' ? `_Mod${modulo}_Clase${clase}` : '';
     const zipName = `Moodle_${ids}${suffix}.zip`;
 
-    // Send as multipart/form-data — Make can receive the ZIP as a file attachment
-    const form = new FormData();
-    form.append('zip', zipBlob, zipName);
-    form.append('tipo_aula',      tipo);
-    form.append('id_cl',          idCl);
-    form.append('id_mx',          idMx);
-    form.append('id_co',          idCo);
-    form.append('modulo',         modulo || '');
-    form.append('clase',          clase  || '');
-    form.append('total_archivos', String(files.length));
-    form.append('zip_nombre',     zipName);
-    form.append('timestamp',      new Date().toISOString());
+    const payload = {
+      timestamp:      new Date().toISOString(),
+      tipo_aula:      tipo,
+      id_cl:          idCl,
+      id_mx:          idMx,
+      id_co:          idCo,
+      modulo:         modulo || '',
+      clase:          clase  || '',
+      total_archivos: files.length,
+      zip_nombre:     zipName,
+      zip_base64:     zipB64
+    };
 
     const res = await fetch(webhookUrl, {
-      method: 'POST',
-      body:   form        // No Content-Type header — browser sets multipart boundary automatically
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload)
     });
 
     document.getElementById('upload-loading-text').textContent = 'Esperando confirmación de Moodle…';
