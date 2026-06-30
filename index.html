@@ -608,6 +608,8 @@ function cleanMeta(text) {
   let t = text.trim();
   // Strip HTML/XML tags first (fix 3)
   t = t.replace(/<[^>]+>/g, ' ').replace(/&[a-z#0-9]+;/gi, ' ').replace(/\s+/g, ' ').trim();
+  // Strip source/citation prefixes like "* Fuente:", "Source:", "Ref:"
+  t = t.replace(/^[\*\s]*(?:fuente|source|ref|cita|autor|title|título)[\s:]+/i, '').trim();
   // Strip DOI/URL prefixes (fix E, G)
   if (/^(https?:\/\/)?doi[\s.:\/]*10\.\d{4}/i.test(t) || /^Httpsdoi/i.test(t)) return '';
   // Strip known repository prefixes (fix 8)
@@ -644,8 +646,8 @@ function truncateTitle(title) {
 
 // Fix capitalization
 // Detect English titles and prefix with "(Inglés) "
-const EN_MARKERS = new Set(['the','of','and','in','for','to','with','an','is','are','that','this','on','at','by','from','its','their','be','has','have','was','were','not','but','or','it','as','into','about','between','through','within','among','across','during','against','art','therapy','based','approach','using','role','toward','beyond','effects','review']);
-const ES_MARKERS = new Set(['de','la','el','en','con','por','para','que','y','del','los','las','una','un','se','es','lo','su','al','le','nos','hay','como','pero','más','si','también','sobre','entre','hacia','durante','contra','según','sin','una','arte','terapia','arteterapia','creatividad','psicología','educación']);
+const EN_MARKERS = new Set(['the','of','and','in','for','to','with','an','is','are','that','this','on','at','by','from','its','their','be','has','have','was','were','not','but','or','it','as','into','about','between','through','within','among','across','during','against','art','therapy','based','approach','using','role','toward','beyond','effects','review','selection','personnel','validity','utility','methods','practical','theoretical','implications','research','findings','predictive','battery','tests','relation','employability','candidates','psychological','behavior','management','human','resources','assessment','performance','cognitive','clinical','social']);
+const ES_MARKERS = new Set(['de','la','el','en','con','por','para','que','y','del','los','las','una','un','se','es','lo','su','al','le','nos','hay','como','pero','más','si','también','sobre','entre','hacia','durante','contra','según','sin','arte','terapia','arteterapia','creatividad','psicología','educación','selección','personal','validez','batería','pruebas','relación','empleabilidad','candidatos','gestión','personas','resultados']);
 
 function isEnglishTitle(text) {
   if (!text) return false;
@@ -750,11 +752,11 @@ function isChapterLabel(text) {
 const CONNECTOR_END = /\b(y|e|o|u|de|del|de\s+la|de\s+los|en|el|la|los|las|un|una|por|para|con|que|a|al|and|the|of|in|to|or|an|with|for|from|at|by|as|its)\s*$/i;
 
 function shouldJoin(currentText, nextText, allCaps) {
+  // Translation check FIRST — even all-caps bilingual lines must not be merged
+  if (isTranslationLine(currentText, nextText)) return false;
   if (allCaps) return true;
   if (/^[a-záéíóúàèìòùüñ"«¿(]/.test(nextText)) return true;
   if (CONNECTOR_END.test(currentText)) return true;
-  // Stop if next line looks like a translation (different language from current)
-  if (isTranslationLine(currentText, nextText)) return false;
   return false;
 }
 
@@ -767,10 +769,9 @@ function isTranslationLine(current, next) {
   const curEn  = curWords.filter(w => EN_MARKERS.has(w)).length;
   const nextEs = nextWords.filter(w => ES_MARKERS.has(w)).length;
   const nextEn = nextWords.filter(w => EN_MARKERS.has(w)).length;
-  // Current is clearly Spanish, next is clearly English → translation
-  if (curEs >= 2 && curEn === 0 && nextEn >= 2 && nextEs === 0) return true;
-  // Current is clearly English, next is clearly Spanish → translation
-  if (curEn >= 2 && curEs === 0 && nextEs >= 2 && nextEn === 0) return true;
+  // Lower threshold to 1 — even one clear marker per side is enough
+  if (curEs >= 1 && curEn === 0 && nextEn >= 1 && nextEs === 0) return true;
+  if (curEn >= 1 && curEs === 0 && nextEs >= 1 && nextEn === 0) return true;
   return false;
 }
 
