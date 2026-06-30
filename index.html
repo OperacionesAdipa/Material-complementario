@@ -606,6 +606,8 @@ function fixCharEncoding(text) {
 function cleanMeta(text) {
   if (!text) return text;
   let t = text.trim();
+  // Strip HTML/XML tags first (fix 3)
+  t = t.replace(/<[^>]+>/g, ' ').replace(/&[a-z#0-9]+;/gi, ' ').replace(/\s+/g, ' ').trim();
   // Strip DOI/URL prefixes (fix E, G)
   if (/^(https?:\/\/)?doi[\s.:\/]*10\.\d{4}/i.test(t) || /^Httpsdoi/i.test(t)) return '';
   // Strip known repository prefixes (fix 8)
@@ -751,6 +753,24 @@ function shouldJoin(currentText, nextText, allCaps) {
   if (allCaps) return true;
   if (/^[a-záéíóúàèìòùüñ"«¿(]/.test(nextText)) return true;
   if (CONNECTOR_END.test(currentText)) return true;
+  // Stop if next line looks like a translation (different language from current)
+  if (isTranslationLine(currentText, nextText)) return false;
+  return false;
+}
+
+// Detect if nextLine is a translation of currentText (different language)
+function isTranslationLine(current, next) {
+  if (!current || !next) return false;
+  const curWords  = current.toLowerCase().match(/\b[a-záéíóú]{3,}\b/g) || [];
+  const nextWords = next.toLowerCase().match(/\b[a-z]{3,}\b/g) || [];
+  const curEs  = curWords.filter(w => ES_MARKERS.has(w)).length;
+  const curEn  = curWords.filter(w => EN_MARKERS.has(w)).length;
+  const nextEs = nextWords.filter(w => ES_MARKERS.has(w)).length;
+  const nextEn = nextWords.filter(w => EN_MARKERS.has(w)).length;
+  // Current is clearly Spanish, next is clearly English → translation
+  if (curEs >= 2 && curEn === 0 && nextEn >= 2 && nextEs === 0) return true;
+  // Current is clearly English, next is clearly Spanish → translation
+  if (curEn >= 2 && curEs === 0 && nextEs >= 2 && nextEn === 0) return true;
   return false;
 }
 
@@ -1452,7 +1472,18 @@ function resetAll() {
 
 // ── Utilities ─────────────────────────────────────────────────────
 function san(text) {
-  return text.replace(/[\r\n\t]+/g,' ').replace(/[<>:"/\\|?*\x00-\x1F]/g,'').replace(/\s+/g,' ').trim().substring(0,150);
+  if (!text) return '';
+  return text
+    .replace(/<[^>]+>/g, ' ')           // strip HTML/XML tags (fix 3)
+    .replace(/&[a-z#0-9]+;/gi, ' ')     // strip HTML entities
+    .replace(/[\r\n\t]+/g, ' ')
+    .replace(/\s*:\s*/g, ' - ')         // colon → dash (fix 1)
+    .replace(/^[\*\s\-]+/, '')          // clean leading * or - (fix 3)
+    .replace(/[\*†‡]+$/, '')            // clean trailing * † ‡
+    .replace(/[<>"\/\\|?*\x00-\x1F]/g, '') // remove remaining invalid filename chars
+    .replace(/\s+/g, ' ')
+    .trim()
+    .substring(0, 150);
 }
 function noExt(n)  { return n.replace(/\.[^.]+$/,''); }
 function getExt(n) { return (n.match(/\.[^.]+$/) || [''])[0].toLowerCase(); }
